@@ -5,12 +5,20 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class HttpLoader {
 
-    private static final HttpClient httpClient = HttpClient.newHttpClient();
-
     public String get(String url) {
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        HttpClient httpClient = HttpClient.newBuilder()
+//                .followRedirects(Redirect.ALWAYS)
+//                .connectTimeout(Duration.ofSeconds(5))
+                .executor(executor)
+                .build();
 
         try {
             HttpRequest request = HttpRequest.newBuilder()
@@ -24,6 +32,10 @@ public class HttpLoader {
             return response.body();
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
+        } finally {
+            executor.shutdownNow();
+            httpClient = null;
+            System.gc();
         }
         return "";
     }

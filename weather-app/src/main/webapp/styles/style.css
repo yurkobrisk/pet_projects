@@ -1,5 +1,5 @@
-html { 
-  background: url(images/weather-app-background.jpg) no-repeat center center fixed;
+html {
+  background: url(../images/weather-app-background.jpg) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -7,6 +7,7 @@ html {
 }
 
 body {
+  font-family: 'Open Sans', sans-serif;
   background: none;
 }
 
@@ -29,6 +30,7 @@ body {
 }
 
 .alert {
-  width: 50%;
-  margin: 20px auto;
+  width: 55%;
+  margin: 5% auto;
+  line-height: 50px;
 }
