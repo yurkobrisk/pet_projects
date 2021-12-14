@@ -4,6 +4,8 @@ import web.crawler.model.InitialDto;
 import web.crawler.model.ResultDto;
 import web.crawler.model.ResultPageDto;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -63,5 +65,19 @@ public class SearchProcessor {
                         Map.Entry::getValue,
                         (e1, e2) -> e1, LinkedHashMap::new)));
         return resultPageDto;
+    }
+
+    /**
+     * Method validate input URL
+     * @param sUrl input URL
+     * @return true if URL is valid
+     */
+    public boolean isValidURL(String sUrl) {
+        try {
+            URL url = new URL(sUrl);
+            return true;
+        } catch (MalformedURLException e) {
+            return false;
+        }
     }
 }

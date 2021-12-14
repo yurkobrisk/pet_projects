@@ -30,20 +30,24 @@ public class WebCrawlerServlet extends HttpServlet {
 
         if (url.equals("") || words.equals("")) {
             System.out.println("One field not fill!");
-            req.getRequestDispatcher("/index.html").forward(req, resp);
+            req.getRequestDispatcher("/index.jsp").forward(req, resp);
 
         } else {
             System.out.println("All fields are fill.");
-            InitialDto initialDto = initialParamsBinder.bind(req);
-            ResultDto resultDto = searchProcessor.search(initialDto);
+            if (!searchProcessor.isValidURL(url)) {
+                req.setAttribute("error", true);
+                req.getRequestDispatcher("/index.jsp").forward(req, resp);
+            } else {
+                InitialDto initialDto = initialParamsBinder.bind(req);
+                ResultDto resultDto = searchProcessor.search(initialDto);
 //            resultDto.getResultPageDtoList()
 //                    .forEach(map -> {
 //                        map.getWordCountMap()
 //                                .forEach((key, value) -> System.out.println("key: " + key + ", value: " + value));
 //                    });
-            req.setAttribute("resultList", resultDto);
-            req.getRequestDispatcher("/result.jsp").forward(req, resp);
-
+                req.setAttribute("resultList", resultDto);
+                req.getRequestDispatcher("/result.jsp").forward(req, resp);
+            }
         }
     }
 
