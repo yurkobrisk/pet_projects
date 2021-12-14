@@ -75,7 +75,10 @@ public class SearchProcessor {
     public boolean isValidURL(String sUrl) {
         try {
             URL url = new URL(sUrl);
-            return true;
+            String regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(sUrl);
+            return matcher.matches();
         } catch (MalformedURLException e) {
             return false;
         }

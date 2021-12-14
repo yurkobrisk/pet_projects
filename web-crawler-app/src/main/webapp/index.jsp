@@ -21,12 +21,18 @@
 		<form>
 		  <div class="mb-3">
 		    <label for="url" class="form-label">Input a URL address</label>
-		    <input class="form-control" id="url" name="url" aria-describedby="URL Address" placeholder="URL address">
+		    <input class="form-control" id="url" name="url" aria-describedby="URL Address" placeholder="https://www.google.com/">
 		    <label for="words" class="form-label" id="words-label">Input words separated by ","</label>
-            <textarea class="form-control" id="words" name="words" placeholder="Input words here"></textarea>
+            <textarea class="form-control" id="words" name="words" placeholder="Input, words, here..."></textarea>
           </div>
 
-		  <c:if test="${error}">
+		  <c:if test="${errorFill}">
+            <div class="alert alert-danger" role="alert">
+             One of the fields are not filled, please try fill all input fields correctly.
+            </div>
+          </c:if>
+
+		  <c:if test="${errorUrl}">
             <div class="alert alert-danger" role="alert">
              The URL address is incorrect, please try another address.
             </div>
