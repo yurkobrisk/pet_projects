@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @WebServlet(urlPatterns = "")
 public class WebCrawlerServlet extends HttpServlet {
@@ -39,7 +40,8 @@ public class WebCrawlerServlet extends HttpServlet {
         } else {
             InitialDto initialDto = initialParamsBinder.bind(req);
             ResultDto resultDto = searchProcessor.search(initialDto);
-            req.setAttribute("resultList", resultDto);
+            Map<String, Integer> resultMap = searchProcessor.calculateNumberWords(resultDto);
+            req.setAttribute("resultMap", resultMap);
             req.getRequestDispatcher("/result.jsp").forward(req, resp);
         }
     }

@@ -16,6 +16,7 @@ public class InitialParamsBinder {
     public InitialDto bind(HttpServletRequest req) {
         final String url = req.getParameter("url");
         final String words = req.getParameter("words");
+        final int depth = Integer.parseInt(req.getParameter("depth"));
 
         InitialDto initialDto = new InitialDto();
 
@@ -26,6 +27,7 @@ public class InitialParamsBinder {
                         .map(String::toLowerCase)
                         .collect(Collectors.toList())
         );
+        initialDto.setDepth(depth);
 
         return initialDto;
     }

@@ -17,13 +17,17 @@ body {
 	width: 40%;
 }
 
+.row,
 .mb-3,
-.alert-danger {
+.alert-danger,
+#words-label,
+#depth {
 	margin-top: 5%;
 }
 
-#words-label {
-	margin-top: 5%;
+#depth-label,
+#visited-pages-label {
+	margin: auto;
 }
 
 #button-submit,

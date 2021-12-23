@@ -22,9 +22,29 @@
 		  <div class="mb-3">
 		    <label for="url" class="form-label">Input a URL address</label>
 		    <input class="form-control" id="url" name="url" aria-describedby="URL Address" placeholder="https://www.google.com/">
-		    <label for="words" class="form-label" id="words-label">Input words separated by ","</label>
-            <textarea class="form-control" id="words" name="words" placeholder="Input, words, here..."></textarea>
+
+        <div class="row">
+          <div class="col-3" id="depth-label">Select link depth: </div>
+          <div class="col-2">
+            <select class="form-select" id="depth-select" name="depth" aria-label="Default link depth">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
           </div>
+          <div class="col-4" id="visited-pages-label">Max Visited Pages: </div>
+          <div class="col-3">
+            <fieldset disabled>
+              <input type="text" class="form-control" id="visited-pages-input" placeholder="10000 max">
+          </fieldset>
+          </div>
+        </div>
+
+		    <label for="words" class="form-label" id="words-label">Input words separated by ","</label>
+        <textarea class="form-control" id="words" name="words" placeholder="Input, words, here..."></textarea>
+      </div>
 
 		  <c:if test="${errorFill}">
             <div class="alert alert-danger" role="alert">

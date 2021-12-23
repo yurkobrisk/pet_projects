@@ -16,7 +16,7 @@
   <body>
 	<div class="container" id="mainDiv">
 		
-		<h1>Found Words:</h1>
+		<h1>Searching results:</h1>
 
 		<table class="styled-table">
           <thead>
@@ -28,15 +28,13 @@
           </thead>
           <tbody>
             <c:set var="count" value="1" scope="page" />
-            <c:forEach items="${resultList.resultPageDtoList}" var="item">
-              <c:forEach items="${item.wordCountMap}" var="mapItem">
-                    <tr>
-                        <td>${count}</th>
-                        <td>${mapItem.key}</td>
-                        <td>${mapItem.value}</td>
-                        <c:set var="count" value="${count + 1}" scope="page"/>
-                    </tr>
-              </c:forEach>
+            <c:forEach items="${resultMap}" var="resultMapItem">
+                <tr>
+                    <td>${count}</th>
+                    <td>${resultMapItem.key}</td>
+                    <td>${resultMapItem.value}</td>
+                    <c:set var="count" value="${count + 1}" scope="page"/>
+                </tr>
             </c:forEach>
           </tbody>
         </table>
