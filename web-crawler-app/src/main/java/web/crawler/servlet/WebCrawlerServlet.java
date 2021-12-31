@@ -28,6 +28,7 @@ public class WebCrawlerServlet extends HttpServlet {
         url = setValue(url);
         String words = req.getParameter("words");
         words = setValue(words);
+        String numberLinks = req.getParameter("maxlinks");
 
         if (url.equals("") && words.equals("")) {
             req.getRequestDispatcher("/index.jsp").forward(req, resp);
@@ -36,6 +37,9 @@ public class WebCrawlerServlet extends HttpServlet {
             req.getRequestDispatcher("/index.jsp").forward(req, resp);
         } else if (!searchProcessor.isValidURL(url)) {
             req.setAttribute("errorUrl", true);
+            req.getRequestDispatcher("/index.jsp").forward(req, resp);
+        } else if (initialParamsBinder.parseString(numberLinks) == -1) {
+            req.setAttribute("errorLinks", true);
             req.getRequestDispatcher("/index.jsp").forward(req, resp);
         } else {
             InitialDto initialDto = initialParamsBinder.bind(req);

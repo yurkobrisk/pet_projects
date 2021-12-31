@@ -26,6 +26,7 @@ public class SearchProcessor {
         String url = initialDto.getInputUrl();
         String content = httpLoader.get(url);
         int depth = initialDto.getDepth();
+        int inputMaxLinks = initialDto.getMaxlinks();
 
         Set<String> linksSet = new HashSet<>();
         ResultDto resultDto = new ResultDto();
@@ -33,7 +34,14 @@ public class SearchProcessor {
                     .add(parse(url, content, initialDto.getInputWords()));
 
         for (int i = 1; i < depth; i++) {
-            linksSet.addAll(getAllLinksFromResultDto(resultDto));
+
+            if (inputMaxLinks > linksSet.size()) {
+                int temp = inputMaxLinks - linksSet.size();
+                getAllLinksFromResultDto(resultDto).stream()
+                        .limit(temp)
+                        .forEach(linksSet::add);
+            } else break;
+
             System.out.println("Количество ссылок на " + i + "-м уровне = " + linksSet.size());
             for (String link : linksSet) {
                 content = httpLoader.get(link);

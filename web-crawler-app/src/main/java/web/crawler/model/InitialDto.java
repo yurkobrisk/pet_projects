@@ -7,6 +7,15 @@ public class InitialDto {
     private String inputUrl;
     private List<String> inputWords;
     private int depth;
+    private int maxlinks;
+
+    public int getMaxlinks() {
+        return maxlinks;
+    }
+
+    public void setMaxlinks(int maxlinks) {
+        this.maxlinks = maxlinks;
+    }
 
     public int getDepth() {
         return depth;

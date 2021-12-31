@@ -34,11 +34,11 @@
               <option value="5">5</option>
             </select>
           </div>
-          <div class="col-4" id="visited-pages-label">Max Visited Pages: </div>
+          <div class="col-4" id="visited-pages-label">Max Visit Pages: </div>
           <div class="col-3">
-            <fieldset disabled>
-              <input type="text" class="form-control" id="visited-pages-input" placeholder="10000 max">
-          </fieldset>
+            <!-- <fieldset disabled> -->
+              <input type="text" class="form-control" id="visited-pages-input" name="maxlinks" placeholder="10000 max">
+            <!-- </fieldset> -->
           </div>
         </div>
 
@@ -47,16 +47,22 @@
       </div>
 
 		  <c:if test="${errorFill}">
-            <div class="alert alert-danger" role="alert">
-             One of the fields are not filled, please try fill all input fields correctly.
-            </div>
-          </c:if>
+        <div class="alert alert-danger" role="alert">
+         One of the fields are not filled, please try fill all input fields correctly.
+        </div>
+      </c:if>
 
 		  <c:if test="${errorUrl}">
-            <div class="alert alert-danger" role="alert">
-             The URL address is incorrect, please try another address.
-            </div>
-          </c:if>
+        <div class="alert alert-danger" role="alert">
+         The URL address is incorrect, please try another address.
+        </div>
+      </c:if>
+
+      <c:if test="${errorLinks}">
+        <div class="alert alert-danger" role="alert">
+         The value of max visit pages is incorrect, please try again.
+        </div>
+      </c:if>
 
 		  <button type="submit" class="btn btn-primary" id="button-submit">Submit</button>
 		</form>
