@@ -12,4 +12,6 @@ public class Forecast {
     public Clouds clouds;
     public Coord coord;
     public String cod;
+    public String dt;
+    public String timezone;
 }
