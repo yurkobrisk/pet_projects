@@ -5,6 +5,7 @@ import by.korziuk.weather_telegram_bot.service.EmojiMapper;
 import by.korziuk.weather_telegram_bot.service.ForecastProcessor;
 import com.vdurmont.emoji.EmojiManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
@@ -20,9 +21,12 @@ import java.util.TimeZone;
 @Component
 public class WeatherBot extends TelegramLongPollingBot {
 
-    private static final String TOKEN = "5571834933:AAFJbWAZyXZbdQRiMNwfd77RZ29qIlzf6OA";
-    private static final String USERNAME = "@ykweatherBot";
-    private static final String APP_ID = "1d3e0f1f78a754b9d3f7a810ebf65783";
+    @Value(value = "${application.token}")
+    private final String TOKEN = null;
+    @Value(value = "${application.username}")
+    private final String USERNAME = null;
+    @Value(value = "${application.id}")
+    private final String APP_ID = null;
 
     @Autowired
     EmojiMapper emojiMapper;
@@ -108,8 +112,8 @@ public class WeatherBot extends TelegramLongPollingBot {
                     + EmojiManager.getForAlias("blowing_wind").getUnicode() + " "+ forecast.wind.speed + "m/s "
                     + EmojiManager.getForAlias("temperature").getUnicode() + " " + forecast.main.feels_like
                     + '\u2103' + "\r\n"
-                + EmojiManager.getForAlias("calendar").getUnicode()
-                    + "Local Time: " + getLocalTime(forecast.timezone)
+                + "Local Time: " + EmojiManager.getForAlias("calendar").getUnicode()
+                    + " " + getLocalTime(forecast.timezone)
                 + "</pre></B>";
     }
 }
