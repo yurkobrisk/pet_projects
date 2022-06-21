@@ -60,7 +60,9 @@ public class WeatherBot extends TelegramLongPollingBot {
                         execute(SendMessage
                                 .builder()
                                 .chatId(message.getChatId().toString())
-                                .text("Nothing to say you! :) City not found.")
+                                .text("Nothing to say you! "
+                                        + EmojiManager.getForAlias("disappointed").getUnicode()
+                                        + " City not found.")
                                 .build());
                         return;
                     } catch (TelegramApiException e) {
@@ -74,6 +76,18 @@ public class WeatherBot extends TelegramLongPollingBot {
                             .chatId(message.getChatId().toString())
                             .parseMode(ParseMode.HTML)
                             .text(getResponce(forecast))
+                            .build());
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    execute(SendMessage
+                            .builder()
+                            .chatId(message.getChatId().toString())
+                            .text("Nothing to say you! "
+                                    + EmojiManager.getForAlias("disappointed").getUnicode()
+                                    + " I think it isn`t the city name. Try again, please.")
                             .build());
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
