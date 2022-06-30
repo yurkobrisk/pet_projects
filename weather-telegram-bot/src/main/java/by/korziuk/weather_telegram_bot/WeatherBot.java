@@ -1,8 +1,9 @@
 package by.korziuk.weather_telegram_bot;
 
 import by.korziuk.weather_telegram_bot.model.Forecast;
-import by.korziuk.weather_telegram_bot.service.EmojiMapper;
+import by.korziuk.weather_telegram_bot.mapper.EmojiMapper;
 import by.korziuk.weather_telegram_bot.service.ForecastProcessor;
+import by.korziuk.weather_telegram_bot.service.UnitModeService;
 import com.vdurmont.emoji.EmojiManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,13 +11,15 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 @Component
 public class WeatherBot extends TelegramLongPollingBot {
@@ -27,6 +30,8 @@ public class WeatherBot extends TelegramLongPollingBot {
     private final String USERNAME = null;
     @Value(value = "${application.id}")
     private final String APP_ID = null;
+
+    private final UnitModeService unitModeService = UnitModeService.getInstance();
 
     @Autowired
     EmojiMapper emojiMapper;
@@ -45,15 +50,76 @@ public class WeatherBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+        if (update.hasCallbackQuery()) {
+            handleCallback(update.getCallbackQuery());
+        }
+
 
         if (update.hasMessage()) {
             Message message = update.getMessage();
 
             if (message.hasText()) {
+                if (message.hasEntities()) {
+                    Optional<MessageEntity> commandEntity =
+                            message.getEntities().stream()
+                                    .filter(entity -> "bot_command".equals(entity.getType()))
+                                    .findFirst();
+
+                    if (commandEntity.isPresent()) {
+                        List<List<InlineKeyboardButton>> units = new ArrayList<>();
+
+                        Unit enumUnit = unitModeService.getCurrentUnit(message.getChatId());
+
+                        units.add(
+                                Arrays.asList(
+                                    InlineKeyboardButton.builder()
+                                            .text(getUnitButton(Unit.METRIC, enumUnit))
+                                            .callbackData("metric")
+                                            .build(),
+                                    InlineKeyboardButton.builder()
+                                            .text(getUnitButton(Unit.IMPERIAL, enumUnit))
+                                            .callbackData("imperial")
+                                            .build())
+                        );
+
+                        String command = message
+                                .getText()
+                                .substring(commandEntity.get().getOffset(), commandEntity.get().getLength());
+
+                        switch (command) {
+                            case "/setunits" :
+                                try {
+                                    execute(SendMessage
+                                            .builder()
+                                            .chatId(message.getChatId().toString())
+                                            .text("Choose units")
+                                            .replyMarkup(InlineKeyboardMarkup.builder().keyboard(units).build())
+                                            .build());
+
+                                } catch (TelegramApiException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                break;
+                            case "/setlanguage" :
+                                try {
+                                    execute(SendMessage
+                                            .builder()
+                                            .chatId(message.getChatId().toString())
+                                            .text("Choose language")
+                                            .build());
+                                } catch (TelegramApiException e) {
+                                    throw new RuntimeException(e);
+                                }
+                        }
+                    }
+                    return;
+                }
+
                 String city = concatenateToString(message.getText());
                 Forecast forecast = processor.getForecast(
-                        "http://api.openweathermap.org/data/2.5/weather?q="
-                                + city + "&units=metric&appid=" + APP_ID);
+                        "http://api.openweathermap.org/data/2.5/weather?q=" + city
+                                + "&units=" + UnitModeService.getInstance().getCurrentUnit(message.getChatId())
+                                + "&appid=" + APP_ID);
 
                 if (forecast.cod.equals("404")) {
                     try {
@@ -75,7 +141,7 @@ public class WeatherBot extends TelegramLongPollingBot {
                             .builder()
                             .chatId(message.getChatId().toString())
                             .parseMode(ParseMode.HTML)
-                            .text(getResponce(forecast))
+                            .text(getResponse(forecast, unitModeService.getCurrentUnit(message.getChatId())))
                             .build());
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
@@ -93,6 +159,24 @@ public class WeatherBot extends TelegramLongPollingBot {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    private void handleCallback(CallbackQuery callbackQuery) {
+        Message message = callbackQuery.getMessage();
+//        unit = callbackQuery.getData();
+        Unit unitEnum = Unit.valueOf(callbackQuery.getData().toUpperCase());
+        unitModeService.setCurrentUnit(message.getChatId(), unitEnum);
+
+        try {
+            execute(SendMessage
+                        .builder()
+                        .chatId(message.getChatId().toString())
+                        .text("The unit is " + unitEnum.name().toLowerCase() + " now.")
+                        .build()
+            );
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -115,19 +199,33 @@ public class WeatherBot extends TelegramLongPollingBot {
                 calendar.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.ENGLISH));
     }
 
-    private String getResponce(Forecast forecast) {
+    private String getResponse(Forecast forecast, Unit unit) {
         return "<B><pre>" + forecast.name + ", "
                 + EmojiManager.getForAlias(forecast.sys.country.toLowerCase()).getUnicode()
-                    + ": " + forecast.main.temp + '\u2103' + "\r\n"
-                + "Max: " + forecast.main.temp_max + '\u2103' + " - Min: " + forecast.main.temp_min + '\u2103' + "\r\n"
-                + forecast.weather.get(0).main + " " + emojiMapper.getEmoji(forecast.weather.get(0).icon) + " "
+                    + ": feels like " + forecast.main.feels_like + getTemperature(unit) + "\r\n"
+                + "Min " + forecast.main.temp_min + getTemperature(unit)
+                + " - Max " + forecast.main.temp_max + getTemperature(unit) + "\r\n"
+                + forecast.weather.get(0).main + " " + emojiMapper.getEmoji(forecast.weather.get(0).icon) + "  "
                     + forecast.weather.get(0).description + "\r\n"
                 + EmojiManager.getForAlias("droplet").getUnicode() + " " + forecast.main.humidity + "% "
-                    + EmojiManager.getForAlias("blowing_wind").getUnicode() + " "+ forecast.wind.speed + "m/s "
-                    + EmojiManager.getForAlias("temperature").getUnicode() + " " + forecast.main.feels_like
-                    + '\u2103' + "\r\n"
-                + "Local Time: " + EmojiManager.getForAlias("calendar").getUnicode()
-                    + " " + getLocalTime(forecast.timezone)
+                    + EmojiManager.getForAlias("blowing_wind").getUnicode() + " "+ forecast.wind.speed
+                    + getWindSpeed(unit)
+                    + EmojiManager.getForAlias("temperature").getUnicode() + " " + forecast.main.temp
+                    + getTemperature(unit) + "\r\n"
+                + "Local Time " + EmojiManager.getForAlias("date").getUnicode()
+                    + "  " + getLocalTime(forecast.timezone)
                 + "</pre></B>";
+    }
+
+    private String getUnitButton(Unit saved, Unit current) {
+        return saved == current ? saved.name().toLowerCase() + "  \uD83D\uDFE2" : saved.name().toLowerCase();
+    }
+
+    private String getTemperature(Unit unit) {
+        return unit == Unit.METRIC ? " " + '\u2103' : " " + '\u2109';
+    }
+
+    private String getWindSpeed(Unit unit) {
+        return unit == Unit.METRIC ? " meter/sec " : " miles/hour ";
     }
 }

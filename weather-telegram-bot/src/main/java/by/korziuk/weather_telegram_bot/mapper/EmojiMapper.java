@@ -1,4 +1,4 @@
-package by.korziuk.weather_telegram_bot.service;
+package by.korziuk.weather_telegram_bot.mapper;
 
 import com.vdurmont.emoji.EmojiManager;
 import org.springframework.stereotype.Component;
