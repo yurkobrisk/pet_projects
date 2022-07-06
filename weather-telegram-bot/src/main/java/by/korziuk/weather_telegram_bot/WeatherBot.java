@@ -3,6 +3,7 @@ package by.korziuk.weather_telegram_bot;
 import by.korziuk.weather_telegram_bot.model.Forecast;
 import by.korziuk.weather_telegram_bot.mapper.EmojiMapper;
 import by.korziuk.weather_telegram_bot.service.ForecastProcessor;
+import by.korziuk.weather_telegram_bot.service.LanguageModeService;
 import by.korziuk.weather_telegram_bot.service.UnitModeService;
 import com.vdurmont.emoji.EmojiManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class WeatherBot extends TelegramLongPollingBot {
     private final String APP_ID = null;
 
     private final UnitModeService unitModeService = UnitModeService.getInstance();
+    private final LanguageModeService languageModeService = LanguageModeService.getInstance();
 
     @Autowired
     EmojiMapper emojiMapper;
@@ -67,8 +69,10 @@ public class WeatherBot extends TelegramLongPollingBot {
 
                     if (commandEntity.isPresent()) {
                         List<List<InlineKeyboardButton>> units = new ArrayList<>();
+                        List<List<InlineKeyboardButton>> languages = new ArrayList<>();
 
                         Unit enumUnit = unitModeService.getCurrentUnit(message.getChatId());
+                        Language enumLanguage = languageModeService.getCurrentLanguage(message.getChatId());
 
                         units.add(
                                 Arrays.asList(
@@ -80,6 +84,19 @@ public class WeatherBot extends TelegramLongPollingBot {
                                             .text(getUnitButton(Unit.IMPERIAL, enumUnit))
                                             .callbackData("imperial")
                                             .build())
+                        );
+
+                        languages.add(
+                                Arrays.asList(
+                                        InlineKeyboardButton.builder()
+                                            .text(getLanguageButton(Language.EN, enumLanguage))
+                                            .callbackData("en")
+                                            .build(),
+                                        InlineKeyboardButton.builder()
+                                                .text(getLanguageButton(Language.RU, enumLanguage))
+                                                .callbackData("ru")
+                                                .build()
+                                )
                         );
 
                         String command = message
@@ -106,6 +123,7 @@ public class WeatherBot extends TelegramLongPollingBot {
                                             .builder()
                                             .chatId(message.getChatId().toString())
                                             .text("Choose language")
+                                            .replyMarkup(InlineKeyboardMarkup.builder().keyboard(languages).build())
                                             .build());
                                 } catch (TelegramApiException e) {
                                     throw new RuntimeException(e);
@@ -119,7 +137,8 @@ public class WeatherBot extends TelegramLongPollingBot {
                 Forecast forecast = processor.getForecast(
                         "http://api.openweathermap.org/data/2.5/weather?q=" + city
                                 + "&units=" + UnitModeService.getInstance().getCurrentUnit(message.getChatId())
-                                + "&appid=" + APP_ID);
+                                + "&appid=" + APP_ID
+                                + "&lang=" + LanguageModeService.getInstance().getCurrentLanguage(message.getChatId()));
 
                 if (forecast.cod.equals("404")) {
                     try {
@@ -164,20 +183,39 @@ public class WeatherBot extends TelegramLongPollingBot {
 
     private void handleCallback(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
-//        unit = callbackQuery.getData();
-        Unit unitEnum = Unit.valueOf(callbackQuery.getData().toUpperCase());
-        unitModeService.setCurrentUnit(message.getChatId(), unitEnum);
+        String data = callbackQuery.getData().toUpperCase();
 
-        try {
-            execute(SendMessage
+        Unit unitEnum = Arrays.stream(Unit.values()).filter(element -> element.name().equals(data)).findFirst().orElse(null);
+        if (unitEnum != null){
+            unitModeService.setCurrentUnit(message.getChatId(), unitEnum);
+
+            try {
+                execute(SendMessage
                         .builder()
                         .chatId(message.getChatId().toString())
                         .text("The unit is " + unitEnum.name().toLowerCase() + " now.")
                         .build()
-            );
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+                );
+                return;
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
         }
+
+        Language languageEnum = Arrays.stream(Language.values()).filter(element -> element.name().equals(data)).findFirst().orElse(null);
+            languageModeService.setCurrentLanguage(message.getChatId(), languageEnum);
+
+            try {
+                execute(SendMessage
+                        .builder()
+                        .chatId(message.getChatId().toString())
+                        .text("The language is " + languageEnum.name().toLowerCase() + " now.")
+                        .build()
+                );
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+
     }
 
     private String concatenateToString(String stringWithSpaces) {
@@ -203,21 +241,24 @@ public class WeatherBot extends TelegramLongPollingBot {
         return "<B><pre>" + forecast.name + ", "
                 + EmojiManager.getForAlias(forecast.sys.country.toLowerCase()).getUnicode()
                     + ": feels like " + forecast.main.feels_like + getTemperature(unit) + "\r\n"
-                + "Min " + forecast.main.temp_min + getTemperature(unit)
-                + " - Max " + forecast.main.temp_max + getTemperature(unit) + "\r\n"
-                + forecast.weather.get(0).main + " " + emojiMapper.getEmoji(forecast.weather.get(0).icon) + "  "
-                    + forecast.weather.get(0).description + "\r\n"
+                + EmojiManager.getForAlias("chart_with_downwards_trend").getUnicode() + forecast.main.temp_min + getTemperature(unit)
+                + " - " + EmojiManager.getForAlias("chart_with_upwards_trend").getUnicode() + forecast.main.temp_max + getTemperature(unit) + "\r\n"
+                + emojiMapper.getEmoji(forecast.weather.get(0).icon) + "  " + forecast.weather.get(0).description + "\r\n"
                 + EmojiManager.getForAlias("droplet").getUnicode() + " " + forecast.main.humidity + "% "
                     + EmojiManager.getForAlias("blowing_wind").getUnicode() + " "+ forecast.wind.speed
                     + getWindSpeed(unit)
                     + EmojiManager.getForAlias("temperature").getUnicode() + " " + forecast.main.temp
                     + getTemperature(unit) + "\r\n"
-                + "Local Time " + EmojiManager.getForAlias("date").getUnicode()
+                + EmojiManager.getForAlias("date").getUnicode()
                     + "  " + getLocalTime(forecast.timezone)
                 + "</pre></B>";
     }
 
     private String getUnitButton(Unit saved, Unit current) {
+        return saved == current ? saved.name().toLowerCase() + "  \uD83D\uDFE2" : saved.name().toLowerCase();
+    }
+
+    private String getLanguageButton(Language saved, Language current) {
         return saved == current ? saved.name().toLowerCase() + "  \uD83D\uDFE2" : saved.name().toLowerCase();
     }
 

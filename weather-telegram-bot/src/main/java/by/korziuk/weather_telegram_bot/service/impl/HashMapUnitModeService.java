@@ -8,18 +8,18 @@ import java.util.Map;
 
 public class HashMapUnitModeService implements UnitModeService {
 
-    private static Map<Long, Unit> map = new HashMap<>();
+    private static Map<Long, Unit> unitMap = new HashMap<>();
 
     @Override
     public Unit getCurrentUnit(long chatId) {
-        if (map.containsKey(chatId)) {
-            return map.get(chatId);
+        if (unitMap.containsKey(chatId)) {
+            return unitMap.get(chatId);
         }
         return Unit.METRIC;
     }
 
     @Override
     public void setCurrentUnit(long chatId, Unit unit) {
-        map.put(chatId, unit);
+        unitMap.put(chatId, unit);
     }
 }
