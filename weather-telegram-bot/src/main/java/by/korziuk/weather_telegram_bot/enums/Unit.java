@@ -1,4 +1,4 @@
-package by.korziuk.weather_telegram_bot;
+package by.korziuk.weather_telegram_bot.enums;
 
 public enum Unit {
     METRIC,

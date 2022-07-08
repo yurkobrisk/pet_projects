@@ -1,5 +1,7 @@
 package by.korziuk.weather_telegram_bot;
 
+import by.korziuk.weather_telegram_bot.enums.Language;
+import by.korziuk.weather_telegram_bot.enums.Unit;
 import by.korziuk.weather_telegram_bot.model.Forecast;
 import by.korziuk.weather_telegram_bot.mapper.EmojiMapper;
 import by.korziuk.weather_telegram_bot.service.ForecastProcessor;
@@ -67,67 +69,61 @@ public class WeatherBot extends TelegramLongPollingBot {
                                     .filter(entity -> "bot_command".equals(entity.getType()))
                                     .findFirst();
 
-                    if (commandEntity.isPresent()) {
-                        List<List<InlineKeyboardButton>> units = new ArrayList<>();
-                        List<List<InlineKeyboardButton>> languages = new ArrayList<>();
+                    if (commandEntity.isPresent() && commandEntity.get().getText().equals("/setunits")) {
+                        List<List<InlineKeyboardButton>> unitButtons = new ArrayList<>();
+                        Unit currentUnit = unitModeService.getCurrentUnit(message.getChatId());
 
-                        Unit enumUnit = unitModeService.getCurrentUnit(message.getChatId());
-                        Language enumLanguage = languageModeService.getCurrentLanguage(message.getChatId());
-
-                        units.add(
-                                Arrays.asList(
-                                    InlineKeyboardButton.builder()
-                                            .text(getUnitButton(Unit.METRIC, enumUnit))
-                                            .callbackData("metric")
-                                            .build(),
-                                    InlineKeyboardButton.builder()
-                                            .text(getUnitButton(Unit.IMPERIAL, enumUnit))
-                                            .callbackData("imperial")
-                                            .build())
-                        );
-
-                        languages.add(
+                        unitButtons.add(
                                 Arrays.asList(
                                         InlineKeyboardButton.builder()
-                                            .text(getLanguageButton(Language.EN, enumLanguage))
+                                                .text(getUnitButton(Unit.METRIC, currentUnit))
+                                                .callbackData("metric")
+                                                .build(),
+                                        InlineKeyboardButton.builder()
+                                                .text(getUnitButton(Unit.IMPERIAL, currentUnit))
+                                                .callbackData("imperial")
+                                                .build())
+                        );
+
+                        try {
+                            execute(SendMessage
+                                    .builder()
+                                    .chatId(message.getChatId().toString())
+                                    .text("Choose unit")
+                                    .replyMarkup(InlineKeyboardMarkup.builder().keyboard(unitButtons).build())
+                                    .build());
+
+                        } catch (TelegramApiException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                    if (commandEntity.isPresent() && commandEntity.get().getText().equals("/setlanguage")) {
+                        List<List<InlineKeyboardButton>> languageButtons = new ArrayList<>();
+                        Language currentLanguage = languageModeService.getCurrentLanguage(message.getChatId());
+
+                        languageButtons.add(
+                                Arrays.asList(
+                                        InlineKeyboardButton.builder()
+                                            .text(getLanguageButton(Language.EN, currentLanguage))
                                             .callbackData("en")
                                             .build(),
                                         InlineKeyboardButton.builder()
-                                                .text(getLanguageButton(Language.RU, enumLanguage))
+                                                .text(getLanguageButton(Language.RU, currentLanguage))
                                                 .callbackData("ru")
                                                 .build()
                                 )
                         );
 
-                        String command = message
-                                .getText()
-                                .substring(commandEntity.get().getOffset(), commandEntity.get().getLength());
-
-                        switch (command) {
-                            case "/setunits" :
-                                try {
-                                    execute(SendMessage
-                                            .builder()
-                                            .chatId(message.getChatId().toString())
-                                            .text("Choose units")
-                                            .replyMarkup(InlineKeyboardMarkup.builder().keyboard(units).build())
-                                            .build());
-
-                                } catch (TelegramApiException e) {
-                                    throw new RuntimeException(e);
-                                }
-                                break;
-                            case "/setlanguage" :
-                                try {
-                                    execute(SendMessage
-                                            .builder()
-                                            .chatId(message.getChatId().toString())
-                                            .text("Choose language")
-                                            .replyMarkup(InlineKeyboardMarkup.builder().keyboard(languages).build())
-                                            .build());
-                                } catch (TelegramApiException e) {
-                                    throw new RuntimeException(e);
-                                }
+                        try {
+                            execute(SendMessage
+                                    .builder()
+                                    .chatId(message.getChatId().toString())
+                                    .text("Choose language")
+                                    .replyMarkup(InlineKeyboardMarkup.builder().keyboard(languageButtons).build())
+                                    .build());
+                        } catch (TelegramApiException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                     return;
@@ -160,7 +156,9 @@ public class WeatherBot extends TelegramLongPollingBot {
                             .builder()
                             .chatId(message.getChatId().toString())
                             .parseMode(ParseMode.HTML)
-                            .text(getResponse(forecast, unitModeService.getCurrentUnit(message.getChatId())))
+                            .text(getResponse(forecast,
+                                    unitModeService.getCurrentUnit(message.getChatId()),
+                                    languageModeService.getCurrentLanguage(message.getChatId())))
                             .build());
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
@@ -185,15 +183,19 @@ public class WeatherBot extends TelegramLongPollingBot {
         Message message = callbackQuery.getMessage();
         String data = callbackQuery.getData().toUpperCase();
 
-        Unit unitEnum = Arrays.stream(Unit.values()).filter(element -> element.name().equals(data)).findFirst().orElse(null);
-        if (unitEnum != null){
-            unitModeService.setCurrentUnit(message.getChatId(), unitEnum);
+        Unit currentUnit = Arrays.stream(Unit.values())
+                .filter(element -> element.name().equals(data))
+                .findFirst()
+                .orElse(null);
+
+        if (currentUnit != null){
+            unitModeService.setCurrentUnit(message.getChatId(), currentUnit);
 
             try {
                 execute(SendMessage
                         .builder()
                         .chatId(message.getChatId().toString())
-                        .text("The unit is " + unitEnum.name().toLowerCase() + " now.")
+                        .text("The current unit is " + currentUnit.name().toLowerCase() + " now.")
                         .build()
                 );
                 return;
@@ -202,20 +204,25 @@ public class WeatherBot extends TelegramLongPollingBot {
             }
         }
 
-        Language languageEnum = Arrays.stream(Language.values()).filter(element -> element.name().equals(data)).findFirst().orElse(null);
-            languageModeService.setCurrentLanguage(message.getChatId(), languageEnum);
+        Language currentLanguage = Arrays.stream(Language.values())
+                .filter(element -> element.name().equals(data))
+                .findFirst()
+                .orElse(null);
+
+        if (currentLanguage != null){
+            languageModeService.setCurrentLanguage(message.getChatId(), currentLanguage);
 
             try {
                 execute(SendMessage
                         .builder()
                         .chatId(message.getChatId().toString())
-                        .text("The language is " + languageEnum.name().toLowerCase() + " now.")
+                        .text("The current language is " + currentLanguage.getName() + " now.")
                         .build()
                 );
             } catch (TelegramApiException e) {
                 throw new RuntimeException(e);
             }
-
+        }
     }
 
     private String concatenateToString(String stringWithSpaces) {
@@ -237,16 +244,16 @@ public class WeatherBot extends TelegramLongPollingBot {
                 calendar.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.ENGLISH));
     }
 
-    private String getResponse(Forecast forecast, Unit unit) {
-        return "<B><pre>" + forecast.name + ", "
-                + EmojiManager.getForAlias(forecast.sys.country.toLowerCase()).getUnicode()
-                    + ": feels like " + forecast.main.feels_like + getTemperature(unit) + "\r\n"
+    private String getResponse(Forecast forecast, Unit unit, Language language) {
+        return "<B><pre>" + forecast.name + " "
+                + EmojiManager.getForAlias(forecast.sys.country.toLowerCase()).getUnicode() + "  "
+                    + language.getFeelsLike() + " " + forecast.main.feels_like + getTemperature(unit) + "\r\n"
                 + EmojiManager.getForAlias("chart_with_downwards_trend").getUnicode() + forecast.main.temp_min + getTemperature(unit)
                 + " - " + EmojiManager.getForAlias("chart_with_upwards_trend").getUnicode() + forecast.main.temp_max + getTemperature(unit) + "\r\n"
                 + emojiMapper.getEmoji(forecast.weather.get(0).icon) + "  " + forecast.weather.get(0).description + "\r\n"
                 + EmojiManager.getForAlias("droplet").getUnicode() + " " + forecast.main.humidity + "% "
                     + EmojiManager.getForAlias("blowing_wind").getUnicode() + " "+ forecast.wind.speed
-                    + getWindSpeed(unit)
+                    + language.getWindSpeed(unit) + " "
                     + EmojiManager.getForAlias("temperature").getUnicode() + " " + forecast.main.temp
                     + getTemperature(unit) + "\r\n"
                 + EmojiManager.getForAlias("date").getUnicode()
@@ -263,10 +270,6 @@ public class WeatherBot extends TelegramLongPollingBot {
     }
 
     private String getTemperature(Unit unit) {
-        return unit == Unit.METRIC ? " " + '\u2103' : " " + '\u2109';
-    }
-
-    private String getWindSpeed(Unit unit) {
-        return unit == Unit.METRIC ? " meter/sec " : " miles/hour ";
+        return unit == Unit.METRIC ? "" + '\u2103' : "" + '\u2109';
     }
 }

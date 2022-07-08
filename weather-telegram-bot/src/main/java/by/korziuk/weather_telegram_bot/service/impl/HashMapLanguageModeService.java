@@ -1,7 +1,6 @@
 package by.korziuk.weather_telegram_bot.service.impl;
 
-import by.korziuk.weather_telegram_bot.Language;
-import by.korziuk.weather_telegram_bot.Unit;
+import by.korziuk.weather_telegram_bot.enums.Language;
 import by.korziuk.weather_telegram_bot.service.LanguageModeService;
 
 import java.util.HashMap;

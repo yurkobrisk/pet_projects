@@ -1,6 +1,6 @@
 package by.korziuk.weather_telegram_bot.service;
 
-import by.korziuk.weather_telegram_bot.Unit;
+import by.korziuk.weather_telegram_bot.enums.Unit;
 import by.korziuk.weather_telegram_bot.service.impl.HashMapUnitModeService;
 
 public interface UnitModeService {
