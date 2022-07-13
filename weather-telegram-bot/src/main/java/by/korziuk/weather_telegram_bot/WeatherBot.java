@@ -56,126 +56,8 @@ public class WeatherBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         if (update.hasCallbackQuery()) {
             handleCallback(update.getCallbackQuery());
-        }
-
-
-        if (update.hasMessage()) {
-            Message message = update.getMessage();
-
-            if (message.hasText()) {
-                if (message.hasEntities()) {
-                    Optional<MessageEntity> commandEntity =
-                            message.getEntities().stream()
-                                    .filter(entity -> "bot_command".equals(entity.getType()))
-                                    .findFirst();
-
-                    if (commandEntity.isPresent() && commandEntity.get().getText().equals("/setunits")) {
-                        List<List<InlineKeyboardButton>> unitButtons = new ArrayList<>();
-                        Unit currentUnit = unitModeService.getCurrentUnit(message.getChatId());
-
-                        unitButtons.add(
-                                Arrays.asList(
-                                        InlineKeyboardButton.builder()
-                                                .text(getUnitButton(Unit.METRIC, currentUnit))
-                                                .callbackData("metric")
-                                                .build(),
-                                        InlineKeyboardButton.builder()
-                                                .text(getUnitButton(Unit.IMPERIAL, currentUnit))
-                                                .callbackData("imperial")
-                                                .build())
-                        );
-
-                        try {
-                            execute(SendMessage
-                                    .builder()
-                                    .chatId(message.getChatId().toString())
-                                    .text("Choose unit")
-                                    .replyMarkup(InlineKeyboardMarkup.builder().keyboard(unitButtons).build())
-                                    .build());
-
-                        } catch (TelegramApiException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-
-                    if (commandEntity.isPresent() && commandEntity.get().getText().equals("/setlanguage")) {
-                        List<List<InlineKeyboardButton>> languageButtons = new ArrayList<>();
-                        Language currentLanguage = languageModeService.getCurrentLanguage(message.getChatId());
-
-                        languageButtons.add(
-                                Arrays.asList(
-                                        InlineKeyboardButton.builder()
-                                            .text(getLanguageButton(Language.EN, currentLanguage))
-                                            .callbackData("en")
-                                            .build(),
-                                        InlineKeyboardButton.builder()
-                                                .text(getLanguageButton(Language.RU, currentLanguage))
-                                                .callbackData("ru")
-                                                .build()
-                                )
-                        );
-
-                        try {
-                            execute(SendMessage
-                                    .builder()
-                                    .chatId(message.getChatId().toString())
-                                    .text("Choose language")
-                                    .replyMarkup(InlineKeyboardMarkup.builder().keyboard(languageButtons).build())
-                                    .build());
-                        } catch (TelegramApiException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    return;
-                }
-
-                String city = concatenateToString(message.getText());
-                Forecast forecast = processor.getForecast(
-                        "http://api.openweathermap.org/data/2.5/weather?q=" + city
-                                + "&units=" + UnitModeService.getInstance().getCurrentUnit(message.getChatId())
-                                + "&appid=" + APP_ID
-                                + "&lang=" + LanguageModeService.getInstance().getCurrentLanguage(message.getChatId()));
-
-                if (forecast.cod.equals("404")) {
-                    try {
-                        execute(SendMessage
-                                .builder()
-                                .chatId(message.getChatId().toString())
-                                .text("Nothing to say you! "
-                                        + EmojiManager.getForAlias("disappointed").getUnicode()
-                                        + " City not found.")
-                                .build());
-                        return;
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                try {
-                    execute(SendMessage
-                            .builder()
-                            .chatId(message.getChatId().toString())
-                            .parseMode(ParseMode.HTML)
-                            .text(getResponse(forecast,
-                                    unitModeService.getCurrentUnit(message.getChatId()),
-                                    languageModeService.getCurrentLanguage(message.getChatId())))
-                            .build());
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    execute(SendMessage
-                            .builder()
-                            .chatId(message.getChatId().toString())
-                            .text("Nothing to say you! "
-                                    + EmojiManager.getForAlias("disappointed").getUnicode()
-                                    + " I think it isn`t the city name. Try again, please.")
-                            .build());
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
-            }
+        } else if (update.hasMessage()) {
+            handleMessage(update.getMessage());
         }
     }
 
@@ -188,7 +70,7 @@ public class WeatherBot extends TelegramLongPollingBot {
                 .findFirst()
                 .orElse(null);
 
-        if (currentUnit != null){
+        if (currentUnit != null) {
             unitModeService.setCurrentUnit(message.getChatId(), currentUnit);
 
             try {
@@ -225,23 +107,139 @@ public class WeatherBot extends TelegramLongPollingBot {
         }
     }
 
+    private void handleMessage(Message message) {
+
+        if (message.hasText()) {
+
+            if (message.hasEntities()) {
+                handleCommand(message);
+                return;
+            }
+
+            String city = concatenateToString(message.getText());
+            Forecast forecast = processor.getForecast(
+                    "http://api.openweathermap.org/data/2.5/weather?q=" + city
+                            + "&units=" + UnitModeService.getInstance().getCurrentUnit(message.getChatId())
+                            + "&appid=" + APP_ID
+                            + "&lang=" + LanguageModeService.getInstance().getCurrentLanguage(message.getChatId()));
+
+            if (forecast.cod.equals("404")) {
+                try {
+                    execute(SendMessage
+                            .builder()
+                            .chatId(message.getChatId().toString())
+                            .text("Nothing to say you! "
+                                    + EmojiManager.getForAlias("disappointed").getUnicode()
+                                    + " City not found.")
+                            .build());
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    execute(SendMessage
+                            .builder()
+                            .chatId(message.getChatId().toString())
+                            .parseMode(ParseMode.HTML)
+                            .text(getResponse(forecast,
+                                    unitModeService.getCurrentUnit(message.getChatId()),
+                                    languageModeService.getCurrentLanguage(message.getChatId())))
+                            .build());
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            try {
+                execute(SendMessage
+                        .builder()
+                        .chatId(message.getChatId().toString())
+                        .text("Nothing to say you! "
+                                + EmojiManager.getForAlias("disappointed").getUnicode()
+                                + " I think it isn`t the city name. Try again, please.")
+                        .build());
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void handleCommand(Message message) {
+
+        Optional<MessageEntity> commandEntity =
+                message.getEntities().stream()
+                        .filter(entity -> entity.getType().equals("bot_command"))
+                        .findFirst();
+
+        if (commandEntity.isPresent()) {
+            String command = commandEntity.get().getText();
+
+            switch (command) {
+                case "/setunits" : {
+                    List<List<InlineKeyboardButton>> unitButtons = new ArrayList<>();
+                    Unit currentUnit = unitModeService.getCurrentUnit(message.getChatId());
+
+                    unitButtons.add(
+                            Arrays.asList(
+                                    InlineKeyboardButton.builder()
+                                            .text(getUnitButton(Unit.METRIC, currentUnit))
+                                            .callbackData("metric")
+                                            .build(),
+                                    InlineKeyboardButton.builder()
+                                            .text(getUnitButton(Unit.IMPERIAL, currentUnit))
+                                            .callbackData("imperial")
+                                            .build())
+                    );
+
+                    try {
+                        execute(SendMessage
+                                .builder()
+                                .chatId(message.getChatId().toString())
+                                .text("Choose unit")
+                                .replyMarkup(InlineKeyboardMarkup.builder().keyboard(unitButtons).build())
+                                .build());
+                    } catch (TelegramApiException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                }
+
+                case "/setlanguage" : {
+                    List<List<InlineKeyboardButton>> languageButtons = new ArrayList<>();
+                    Language currentLanguage = languageModeService.getCurrentLanguage(message.getChatId());
+
+                    languageButtons.add(
+                            Arrays.asList(
+                                    InlineKeyboardButton.builder()
+                                            .text(getLanguageButton(Language.EN, currentLanguage))
+                                            .callbackData("en")
+                                            .build(),
+                                    InlineKeyboardButton.builder()
+                                            .text(getLanguageButton(Language.RU, currentLanguage))
+                                            .callbackData("ru")
+                                            .build()
+                            )
+                    );
+
+                    try {
+                        execute(SendMessage
+                                .builder()
+                                .chatId(message.getChatId().toString())
+                                .text("Choose language")
+                                .replyMarkup(InlineKeyboardMarkup.builder().keyboard(languageButtons).build())
+                                .build());
+                    } catch (TelegramApiException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
+    }
+
     private String concatenateToString(String stringWithSpaces) {
         if (stringWithSpaces != null) {
             return stringWithSpaces.replaceAll(" ", "+");
         } else return "";
-    }
-
-    private String getLocalTime(String offset) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        calendar.setTimeInMillis(calendar.getTimeInMillis() + (Integer.parseInt(offset)) * 1000L); // in milliseconds
-
-        return String.format("%s-%s-%02d %02d:%02d %s",
-                calendar.get(Calendar.YEAR),
-                calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH),
-                calendar.get(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE),
-                calendar.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.ENGLISH));
     }
 
     private String getResponse(Forecast forecast, Unit unit, Language language) {
@@ -261,15 +259,28 @@ public class WeatherBot extends TelegramLongPollingBot {
                 + "</pre></B>";
     }
 
+    private String getTemperature(Unit unit) {
+        return unit == Unit.METRIC ? "" + '\u2103' : "" + '\u2109';
+    }
+
+    private String getLocalTime(String offset) {
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        calendar.setTimeInMillis(calendar.getTimeInMillis() + (Integer.parseInt(offset)) * 1000L); // in milliseconds
+
+        return String.format("%s-%s-%02d %02d:%02d %s",
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                calendar.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.ENGLISH));
+    }
+
     private String getUnitButton(Unit saved, Unit current) {
         return saved == current ? saved.name().toLowerCase() + "  \uD83D\uDFE2" : saved.name().toLowerCase();
     }
 
     private String getLanguageButton(Language saved, Language current) {
         return saved == current ? saved.name().toLowerCase() + "  \uD83D\uDFE2" : saved.name().toLowerCase();
-    }
-
-    private String getTemperature(Unit unit) {
-        return unit == Unit.METRIC ? "" + '\u2103' : "" + '\u2109';
     }
 }
