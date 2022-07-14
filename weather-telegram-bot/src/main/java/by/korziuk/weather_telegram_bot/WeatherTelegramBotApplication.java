@@ -3,7 +3,6 @@ package by.korziuk.weather_telegram_bot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -11,7 +10,6 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication
-//@ConfigurationPropertiesScan("by.korziuk.weather_telegram_bot.config")
 public class WeatherTelegramBotApplication {
 
 	@Autowired

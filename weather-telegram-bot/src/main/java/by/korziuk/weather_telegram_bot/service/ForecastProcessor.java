@@ -12,7 +12,7 @@ public class ForecastProcessor {
         HttpLoader loader = new HttpLoader();
         String json = loader.get(url);
 
-        System.out.println(json);
+//        System.out.println(json);
 
         Gson gson = new Gson();
 
