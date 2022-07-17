@@ -11,7 +11,7 @@ public class Forecast {
     public Sys sys;
     public Clouds clouds;
     public Coord coord;
-    public String cod;
-    public String dt;
-    public String timezone;
+    public int cod;
+    public int dt;
+    public int timezone;
 }

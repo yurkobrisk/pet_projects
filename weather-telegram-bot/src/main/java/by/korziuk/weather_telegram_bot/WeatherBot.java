@@ -123,7 +123,7 @@ public class WeatherBot extends TelegramLongPollingBot {
                             + "&appid=" + APP_ID
                             + "&lang=" + LanguageModeService.getInstance().getCurrentLanguage(message.getChatId()));
 
-            if (forecast.cod.equals("404")) {
+            if (forecast.cod == 404) {
                 try {
                     execute(SendMessage
                             .builder()
@@ -263,9 +263,9 @@ public class WeatherBot extends TelegramLongPollingBot {
         return unit == Unit.METRIC ? "" + '\u2103' : "" + '\u2109';
     }
 
-    private String getLocalTime(String offset) {
+    private String getLocalTime(int offset) {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        calendar.setTimeInMillis(calendar.getTimeInMillis() + (Integer.parseInt(offset)) * 1000L); // in milliseconds
+        calendar.setTimeInMillis(calendar.getTimeInMillis() + (offset) * 1000L); // in milliseconds
 
         return String.format("%s-%s-%02d %02d:%02d %s",
                 calendar.get(Calendar.YEAR),
