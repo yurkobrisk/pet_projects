@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,30 +38,20 @@ public class ClientController {
     @PostMapping("/clients")
     public ResponseEntity<Client> addClient(@Valid @RequestBody Client client) {
         Client addedClient;
-
         try {
             addedClient = clientRepository.save(client);
+            return ResponseEntity.ok(addedClient);
         } catch (Exception e) {
-            return new ResponseEntity(e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return ResponseEntity.ok(addedClient);
     }
 
     @GetMapping("/clients/{id}")
-    public ResponseEntity<Client> getClient(@PathVariable Long id) {
-        Client client;
+    public ResponseEntity<Client> getClient(@PathVariable("id") long id) {
+        Optional<Client> optionalClient = clientRepository.findById(id);
 
-        try {
-            if (!clientRepository.existsById(id)) {
-                return new ResponseEntity("Client is not found: id=" + id, HttpStatus.BAD_REQUEST);
-            }
-            client = clientRepository
-                    .findById(id)
-                    .orElseThrow(() -> new Exception("Client is not found: id=" + id));
-        } catch (Exception e) {
-            return new ResponseEntity(e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return ResponseEntity.ok(client);
+        return optionalClient.map(client -> new ResponseEntity<>(client, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity("Client not found", HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/clients/phones")
@@ -84,20 +75,12 @@ public class ClientController {
     }
 
     @DeleteMapping("/clients/{id}")
-    public ResponseEntity<Client> deleteClient(@PathVariable Long id) {
-        Client deletedClient;
-
+    public ResponseEntity<HttpStatus> deleteClient(@PathVariable("id") long id) {
         try {
-            if (!clientRepository.existsById(id)) {
-                return new ResponseEntity("Client is not found: id=" + id, HttpStatus.BAD_REQUEST);
-            }
-            deletedClient = clientRepository
-                    .findById(id)
-                    .orElseThrow(() -> new Exception("Client is not found: id=" + id));
             clientRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            return new ResponseEntity(e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return ResponseEntity.ok(deletedClient);
     }
 }
