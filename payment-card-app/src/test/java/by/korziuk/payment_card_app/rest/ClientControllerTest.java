@@ -9,8 +9,6 @@ import by.korziuk.payment_card_app.service.PaymentCardRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,10 +19,8 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
 
@@ -89,6 +85,20 @@ class ClientControllerTest {
                 .andExpect(jsonPath("$", notNullValue()))
                 .andExpect(jsonPath("$.fio", is("Ivan Ivanov")))
                 .andExpect(jsonPath("$.phoneNumber", is("80291111111")));
+    }
+
+    @Test
+    void should_return_not_found_client() throws Exception {
+        //Given
+        long id = 1L;
+        //When
+        Mockito.when(clientRepository.findById(id)).thenReturn(Optional.empty());
+        //Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/clients/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(print());
     }
 
     @Test
