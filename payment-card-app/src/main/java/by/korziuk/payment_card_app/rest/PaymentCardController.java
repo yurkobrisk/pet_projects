@@ -46,7 +46,7 @@ public class PaymentCardController {
     }
 
     @GetMapping("/cards/{id}")
-    public ResponseEntity<PaymentCard> getCard(@PathVariable Long id) {
+    public ResponseEntity<PaymentCard> getCard(@PathVariable("id") Long id) {
         PaymentCard card;
 
         try {
@@ -65,7 +65,7 @@ public class PaymentCardController {
     @PutMapping("/cards/{id}")
     @Transactional
     public ResponseEntity<PaymentCard> updateCard(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @RequestBody PaymentCardUpdateCmd updateCmd) {
         PaymentCard updatedPaymentCard;
         try {
@@ -88,7 +88,7 @@ public class PaymentCardController {
     }
 
     @DeleteMapping("/cards/{id}")
-    public ResponseEntity<PaymentCard> deleteCard(@PathVariable Long id) {
+    public ResponseEntity<PaymentCard> deleteCard(@PathVariable("id") Long id) {
         PaymentCard deletedCard;
 
         try {
