@@ -11,3 +11,5 @@ REST service for getting, adding, editing and removing information about Payment
 
 - > Spring Boot and just run.
 
+- > Testing: HyperSQL Database, JUnit5, SpringBootTest
+
