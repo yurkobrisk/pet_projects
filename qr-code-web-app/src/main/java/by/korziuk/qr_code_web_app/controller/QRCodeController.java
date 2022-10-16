@@ -1,5 +1,7 @@
 package by.korziuk.qr_code_web_app.controller;
 
+import by.korziuk.qr_code_web_app.domain.QRCode;
+import by.korziuk.qr_code_web_app.service.QRCodeRepository;
 import by.korziuk.qr_code_web_app.service.QRCodeService;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ public class QRCodeController {
 
     @Autowired
     QRCodeService qrCodeService;
+    @Autowired
+    QRCodeRepository qrCodeRepository;
 
     @GetMapping("/")
     public String getText(Model model){
@@ -28,7 +32,14 @@ public class QRCodeController {
             @ModelAttribute(name = "inputText") String inputText){
         try {
             if (!inputText.isEmpty()){
-                String imageBLOB = qrCodeService.createImageQR(inputText);
+                String imageBLOB;
+                if (qrCodeRepository.existsByDescription(inputText)){
+                    imageBLOB = qrCodeRepository.findByDescription(inputText).getBinaryImage();
+                } else {
+                    imageBLOB = qrCodeService.createImageQR(inputText);
+                    qrCodeRepository.save(new QRCode(inputText, imageBLOB));
+                }
+
                 model.addAttribute("imageBLOB", imageBLOB);
                 model.addAttribute("isTextPresent", "true");
             } else {
