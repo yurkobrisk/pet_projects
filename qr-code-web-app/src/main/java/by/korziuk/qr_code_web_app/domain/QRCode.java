@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class QRCode implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "QR_ID")
     private Long id;
     @Column(name = "QR_DESCRIPTION")
