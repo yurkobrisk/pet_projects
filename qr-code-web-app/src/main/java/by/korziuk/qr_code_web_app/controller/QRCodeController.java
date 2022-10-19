@@ -1,8 +1,9 @@
 package by.korziuk.qr_code_web_app.controller;
 
 import by.korziuk.qr_code_web_app.domain.QRCode;
-import by.korziuk.qr_code_web_app.service.QRCodeRepository;
-import by.korziuk.qr_code_web_app.service.QRCodeService;
+import by.korziuk.qr_code_web_app.repository.QRCodeRepository;
+import by.korziuk.qr_code_web_app.service.IQRCodeService;
+import by.korziuk.qr_code_web_app.service.QRCodeServiceImpl;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,9 +16,7 @@ import java.io.IOException;
 public class QRCodeController {
 
     @Autowired
-    QRCodeService qrCodeService;
-    @Autowired
-    QRCodeRepository qrCodeRepository;
+    IQRCodeService qrCodeService;
 
     @GetMapping("/")
     public String getText(Model model){
@@ -28,25 +27,20 @@ public class QRCodeController {
 
     @PostMapping("/")
     public String setQRCode(
-            Model model,
-            @ModelAttribute(name = "inputText") String inputText){
-        try {
-            if (!inputText.isEmpty()){
-                String imageBLOB;
-                if (qrCodeRepository.existsByDescription(inputText)){
-                    imageBLOB = qrCodeRepository.findByDescription(inputText).getBinaryImage();
-                } else {
-                    imageBLOB = qrCodeService.createImageQR(inputText);
-                    qrCodeRepository.save(new QRCode(inputText, imageBLOB));
-                }
-
-                model.addAttribute("imageBLOB", imageBLOB);
-                model.addAttribute("isTextPresent", "true");
+        Model model,
+        @ModelAttribute(name = "inputText") String inputText){
+        if (!inputText.isEmpty()){
+            String imageBLOB;
+            if (qrCodeService.existsByDescription(inputText)){
+                imageBLOB = qrCodeService.findByDescription(inputText).getBinaryImage();
             } else {
-                model.addAttribute("isTextPresent", "false");
+                imageBLOB = qrCodeService.createImageQR(inputText);
+                qrCodeService.saveQRCode(new QRCode(inputText, imageBLOB));
             }
-        } catch (WriterException | IOException e) {
-            throw new RuntimeException("The image writer has error");
+            model.addAttribute("imageBLOB", imageBLOB);
+            model.addAttribute("isTextPresent", "true");
+        } else {
+            model.addAttribute("isTextPresent", "false");
         }
         return "index.html";
     }

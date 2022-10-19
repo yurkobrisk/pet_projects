@@ -17,7 +17,7 @@ class QRCodeServiceTest {
     @Value("${binaryString}")
     String expected;
 
-    QRCodeService qrCodeService = new QRCodeService();
+    QRCodeServiceImpl qrCodeService = new QRCodeServiceImpl();
 
     @Test
     void should_create_qr_image() {
@@ -25,11 +25,7 @@ class QRCodeServiceTest {
         String content = "Washington";
         String result = "";
         //When
-        try {
-            result = qrCodeService.createImageQR(content);
-        } catch (WriterException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        result = qrCodeService.createImageQR(content);
         //Then
         MatcherAssert.assertThat(result, Matchers.is(expected));
     }
