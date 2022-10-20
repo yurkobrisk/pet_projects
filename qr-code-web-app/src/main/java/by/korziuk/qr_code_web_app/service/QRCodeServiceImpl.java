@@ -47,7 +47,8 @@ public class QRCodeServiceImpl implements IQRCodeService{
         repository.save(qrCode);
     }
 
-    public String createImageQR(String content){
+    @Override
+    public String createImageQr(String content){
         BitMatrix bitMatrix = null;
         try {
             bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, 300, 300);

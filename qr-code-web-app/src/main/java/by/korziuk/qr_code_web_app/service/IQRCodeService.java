@@ -10,5 +10,5 @@ public interface IQRCodeService {
     public void deleteQRCodeById(Long id);
     public void updateQRCode(QRCode qrCode);
 
-    public String createImageQR(String description);
+    public String createImageQr(String description);
 }

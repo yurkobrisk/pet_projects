@@ -1,16 +1,11 @@
 package by.korziuk.qr_code_web_app.controller;
 
 import by.korziuk.qr_code_web_app.domain.QRCode;
-import by.korziuk.qr_code_web_app.repository.QRCodeRepository;
 import by.korziuk.qr_code_web_app.service.IQRCodeService;
-import by.korziuk.qr_code_web_app.service.QRCodeServiceImpl;
-import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 
 @Controller
 public class QRCodeController {
@@ -34,7 +29,7 @@ public class QRCodeController {
             if (qrCodeService.existsByDescription(inputText)){
                 imageBLOB = qrCodeService.findByDescription(inputText).getBinaryImage();
             } else {
-                imageBLOB = qrCodeService.createImageQR(inputText);
+                imageBLOB = qrCodeService.createImageQr(inputText);
                 qrCodeService.saveQRCode(new QRCode(inputText, imageBLOB));
             }
             model.addAttribute("imageBLOB", imageBLOB);

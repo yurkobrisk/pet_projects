@@ -1,14 +1,11 @@
 package by.korziuk.qr_code_web_app.service;
 
-import com.google.zxing.WriterException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.io.IOException;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -25,7 +22,7 @@ class QRCodeServiceTest {
         String content = "Washington";
         String result = "";
         //When
-        result = qrCodeService.createImageQR(content);
+        result = qrCodeService.createImageQr(content);
         //Then
         MatcherAssert.assertThat(result, Matchers.is(expected));
     }
