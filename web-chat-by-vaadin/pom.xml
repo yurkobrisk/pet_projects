@@ -13,6 +13,7 @@
 	<groupId>by.korziuk</groupId>
 	<artifactId>web-chat-by-vaadin</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
 	<name>Web Chat</name>
 
