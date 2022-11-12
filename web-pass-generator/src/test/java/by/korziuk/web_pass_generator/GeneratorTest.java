@@ -38,4 +38,13 @@ public class GeneratorTest {
         String symbolString = "!#$%&'()*+,-./:;<=>?@[]^_`{|}~";
         assertTrue(symbolString.contains(String.valueOf(symbol)), "It`s not a special symbol");
     }
+
+    @Test
+    public void generate_random_password() {
+        Generator generator = new Generator();
+        String password = generator.generatePassword(20);
+        System.out.println(password);
+        assertEquals(true ,
+                password.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–{}:;',?/*~$^+=<>]).{8,20}$"));
+    }
 }
