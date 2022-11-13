@@ -1,14 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Password Generator Page</title>
 </head>
 <body>
 
-    <h3>This is password generator page!</h3>
-    <input>
-    <button>Generate</button>
+    <h3>Enter the password lenght ➡ [min 8 - max 20]</h3>
 
+    <form action="#" th:action="@{/}" method="post">
+        <input type="text" name="sizePassword" th:value="${sizePassword}"/>
+
+        <button type="submit">Generate</button>
+
+        <div th:if="${error}">
+            <h3>Try entering the lenght again ...</h3>
+        </div>
+
+        <div th:if="!${error}">
+            <h3 th:text="${password}"></h3>
+        </div>
+    </form>
 </body>
 </html>
