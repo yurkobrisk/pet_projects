@@ -66,4 +66,13 @@ public class GeneratorServiceTest {
         GeneratorServiceImpl generator = new GeneratorServiceImpl();
         assertFalse(generator.isNumber("5738a97"));
     }
+
+    @Test
+    public void isFirst_symbol_in_password_number_letter() {
+        GeneratorServiceImpl generator = new GeneratorServiceImpl();
+        for (int i = 0; i < 30; i++) {
+            char firstCharOfPassword = generator.generatePassword(20).charAt(0);
+            assertTrue(("" + firstCharOfPassword).matches("\\w"));
+        }
+    }
 }
