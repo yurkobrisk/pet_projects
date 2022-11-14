@@ -9,4 +9,8 @@ public interface IGeneratorService {
     String generatePassword(int length);
 
     boolean isNumber(String number);
+
+    void copyToClipboard(String text);
+
+    String pasteFromClipboard();
 }

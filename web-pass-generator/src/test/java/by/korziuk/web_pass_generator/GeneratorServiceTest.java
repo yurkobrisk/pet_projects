@@ -2,6 +2,13 @@ package by.korziuk.web_pass_generator;
 
 import by.korziuk.web_pass_generator.service.GeneratorServiceImpl;
 import org.junit.jupiter.api.Test;
+
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -74,5 +81,12 @@ public class GeneratorServiceTest {
             char firstCharOfPassword = generator.generatePassword(20).charAt(0);
             assertTrue(("" + firstCharOfPassword).matches("\\w"));
         }
+    }
+
+    @Test
+    public void check_clipboard() {
+        GeneratorServiceImpl generator = new GeneratorServiceImpl();
+        generator.copyToClipboard("PasSworD");
+        assertEquals("PasSworD", generator.pasteFromClipboard());
     }
 }

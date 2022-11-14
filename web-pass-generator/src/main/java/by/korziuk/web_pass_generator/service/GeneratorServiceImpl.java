@@ -2,10 +2,18 @@ package by.korziuk.web_pass_generator.service;
 
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.util.Random;
 
 @Service
 public class GeneratorServiceImpl implements IGeneratorService {
+
+    private Clipboard clipboard;
 
     @Override
     public int generateNumber() {
@@ -60,5 +68,22 @@ public class GeneratorServiceImpl implements IGeneratorService {
     @Override
     public boolean isNumber(String number) {
         return number.matches("[0-9]+");
+    }
+
+    @Override
+    public void copyToClipboard(String text) {
+        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection stringSelection = new StringSelection(text);
+        clipboard.setContents(stringSelection, null);
+    }
+
+    @Override
+    public String pasteFromClipboard() {
+        try {
+            return (String) clipboard.getData(DataFlavor.stringFlavor);
+        } catch (UnsupportedFlavorException | IOException e) {
+            System.out.println("Error paste from Clipboard.");
+        }
+        return "";
     }
 }
