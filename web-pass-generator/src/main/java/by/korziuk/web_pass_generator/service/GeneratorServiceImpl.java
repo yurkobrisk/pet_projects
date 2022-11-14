@@ -35,9 +35,9 @@ public class GeneratorServiceImpl implements IGeneratorService {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < length; i++) {
             if (i == 0) {
-                result.append(getRandomChar(4));
+                result.append(getRandomChar(3));
             } else {
-                result.append(getRandomChar(5));
+                result.append(getRandomChar(4));
             }
         }
         return result.toString();

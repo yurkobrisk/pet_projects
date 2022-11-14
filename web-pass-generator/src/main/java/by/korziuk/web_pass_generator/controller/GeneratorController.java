@@ -17,14 +17,17 @@ public class GeneratorController {
     @GetMapping("/")
     public String getSizePassword(Model model) {
         model.addAttribute("sizePassword", "8");
+        model.addAttribute("init", "0");
         return "index.html";
     }
 
     @PostMapping("/")
     public String setPassword(
             Model model,
-            @ModelAttribute(name = "sizePassword") String size) {
+            @ModelAttribute(name = "sizePassword") String size,
+            @ModelAttribute(name = "init") String init) {
 
+        model.addAttribute("init", "1");
         if (generator.isNumber(size)) {
             int parsedSize = Integer.parseInt(size);
             if (parsedSize >= 8 && parsedSize <= 20) {
