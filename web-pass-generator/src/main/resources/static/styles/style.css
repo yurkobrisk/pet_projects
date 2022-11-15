@@ -1,5 +1,5 @@
 html {
-  background: url(../images/weather-app-background.jpg) no-repeat center center fixed;
+  background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), url(../images/cyber-security.png) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -17,16 +17,9 @@ body {
   width: 35%;
 }
 
-#forecastDiv {
-  text-align: center;
-}
-
-#forecastImage {
-  height: 50px;
-}
-
-#city {
-  margin: 5% 0;
+#clipboard {
+  padding-right: 10%;
+  text-align: right;
 }
 
 .alert {
@@ -40,5 +33,5 @@ input {
 }
 
 .btn {
-  margin-top: 10px;
+  margin-top: 5%;
 }

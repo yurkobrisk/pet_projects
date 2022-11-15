@@ -16,7 +16,7 @@ public class GeneratorController {
 
     @GetMapping("/")
     public String getSizePassword(Model model) {
-        model.addAttribute("sizePassword", "8");
+        model.addAttribute("sizePassword", "20");
         model.addAttribute("init", "0");
         return "index.html";
     }
