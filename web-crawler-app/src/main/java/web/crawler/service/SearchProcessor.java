@@ -18,7 +18,7 @@ public class SearchProcessor {
     final private HttpLoader httpLoader = new HttpLoader();
 
     /**
-     * Method method looks for related pages and counts the number of references on them
+     * Method looks for related pages and counts the number of references on them
      * @param initialDto start object
      * @return list of ResultPageDto
      */
