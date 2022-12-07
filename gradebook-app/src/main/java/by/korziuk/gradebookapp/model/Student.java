@@ -22,4 +22,7 @@ public @Data class Student implements Serializable {
     private String lastName;
     @OneToMany(mappedBy = "student")
     private List<Test> tests;
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "G_ID")
+    private Group group;
 }

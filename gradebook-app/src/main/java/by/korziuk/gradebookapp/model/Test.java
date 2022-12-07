@@ -20,4 +20,7 @@ public @Data class Test implements Serializable {
     private Date date;
     @Column(name = "TEST_GRADE")
     private int grade;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "S_ID")
+    private Student student;
 }
