@@ -5,6 +5,8 @@ import by.korziuk.gradebookapp.model.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TeacherServiceImpl implements TeacherService {
 
@@ -29,5 +31,10 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public void deleteTeacher(String id) {
         teacherRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Teacher> findAllTeachers() {
+        return teacherRepository.findAll();
     }
 }

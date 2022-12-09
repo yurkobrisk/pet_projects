@@ -1,6 +1,5 @@
 package by.korziuk.gradebookapp.data;
 
-import by.korziuk.gradebookapp.model.Teacher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
