@@ -14,7 +14,7 @@ public @Data class Teacher implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid-generator")
     @GenericGenerator(name = "uuid-generator", strategy = "uuid2")
-    @Column(name = "TEACHER_ID", nullable = false)
+    @Column(name = "TEACHER_ID", nullable = false, updatable = false, unique = true)
     private String id;
     @Column(name = "TEACHER_NAME")
     private String name;

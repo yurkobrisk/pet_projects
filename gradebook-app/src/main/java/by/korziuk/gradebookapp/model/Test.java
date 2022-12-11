@@ -14,7 +14,7 @@ public @Data class Test implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid-generator")
     @GenericGenerator(name = "uuid-generator", strategy = "uuid2")
-    @Column(name = "TEST_ID", nullable = false)
+    @Column(name = "TEST_ID", nullable = false, updatable = false, unique = true)
     private String id;
     @Column(name = "TEST_DATE")
     private Date date;

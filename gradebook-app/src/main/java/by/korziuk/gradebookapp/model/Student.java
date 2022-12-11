@@ -14,7 +14,7 @@ public @Data class Student implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid-generator")
     @GenericGenerator(name = "uuid-generator", strategy = "uuid2")
-    @Column(name = "S_ID", nullable = false)
+    @Column(name = "S_ID", nullable = false, unique = true, updatable = false)
     private String id;
     @Column(name = "S_NAME")
     private String name;

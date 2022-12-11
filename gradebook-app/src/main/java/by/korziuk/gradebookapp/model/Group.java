@@ -14,7 +14,7 @@ public @Data class Group implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid-generator")
     @GenericGenerator(name = "uuid-generator", strategy = "uuid2")
-    @Column(name = "G_ID", nullable = false)
+    @Column(name = "G_ID", nullable = false, unique = true, updatable = false)
     private String id;
     @Column(name = "G_NAME")
     private String name;
