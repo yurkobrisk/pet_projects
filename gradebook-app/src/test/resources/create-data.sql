@@ -17,11 +17,11 @@ INSERT INTO T_STUDENTS(S_ID, S_NAME, S_LASTNAME, G_ID)
 INSERT INTO T_STUDENTS(S_ID, S_NAME, S_LASTNAME, G_ID)
         VALUES ('student4', 'Dmitry', 'Lobovich', 'group2');
 
-INSERT INTO T_TESTS(TEST_ID, TEST_DATE, TEST_GRADE, S_ID)
-        VALUES ('test1', null, '7', 'student1');
-INSERT INTO T_TESTS(TEST_ID, TEST_DATE, TEST_GRADE, S_ID)
-        VALUES ('test2', null, '10', 'student2');
-INSERT INTO T_TESTS(TEST_ID, TEST_DATE, TEST_GRADE, S_ID)
-        VALUES ('test3', null, '8', 'student3');
-INSERT INTO T_TESTS(TEST_ID, TEST_DATE, TEST_GRADE, S_ID)
-        VALUES ('test4', null, '5', 'student4');
+INSERT INTO T_EXAMS(E_ID, E_DATE, E_GRADE, S_ID)
+        VALUES ('exam1', null, '7', 'student1');
+INSERT INTO T_EXAMS(E_ID, E_DATE, E_GRADE, S_ID)
+        VALUES ('exam2', null, '10', 'student2');
+INSERT INTO T_EXAMS(E_ID, E_DATE, E_GRADE, S_ID)
+        VALUES ('exam3', null, '8', 'student3');
+INSERT INTO T_EXAMS(E_ID, E_DATE, E_GRADE, S_ID)
+        VALUES ('exam4', null, '5', 'student4');

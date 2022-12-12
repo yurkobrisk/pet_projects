@@ -20,7 +20,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher saveTeacher(Teacher teacher) {
-        return teacherRepository.save(teacher);
+        return teacherRepository.saveAndFlush(teacher);
     }
 
     @Override

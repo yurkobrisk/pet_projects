@@ -1,5 +1,6 @@
 package by.korziuk.gradebookapp.controller;
 
+import by.korziuk.gradebookapp.model.Group;
 import by.korziuk.gradebookapp.model.Teacher;
 import by.korziuk.gradebookapp.service.Mapper;
 import by.korziuk.gradebookapp.service.TeacherDto;
@@ -36,12 +37,16 @@ public class controller {
     @PostMapping("/teachers")
     public String newTeacher() {
 
-        TeacherDto dto = new TeacherDto();
-        dto.setName("Petr");
-        dto.setLastName("Ivanov");
-        dto.setSubjectName("English");
+        Teacher teacher = new Teacher();
+        teacher.setName("Petr");
+        teacher.setLastName("Ivanov");
+        teacher.setSubjectName("English");
+        Group group1 = new Group();
+        group1.setName("group 1");
+        Group group2 = new Group();
+        group2.setName("group 2");
+        teacher.setGroups(List.of(group1, group2));
 
-        Teacher teacher = mapper.convertDto(dto);
         teacherService.saveTeacher(teacher);
         return "index";
     }

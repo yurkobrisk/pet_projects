@@ -4,12 +4,11 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "T_STUDENTS")
-public @Data class Student implements Serializable {
+public @Data class Student {
 
     @Id
     @GeneratedValue(generator = "uuid-generator")
@@ -20,9 +19,9 @@ public @Data class Student implements Serializable {
     private String name;
     @Column(name = "S_LASTNAME")
     private String lastName;
-    @OneToMany(mappedBy = "student")
-    private List<Test> tests;
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Exam> exams;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "G_ID")
     private Group group;
 }
