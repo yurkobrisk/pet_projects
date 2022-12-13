@@ -7,11 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
-import java.util.Optional;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Configuration
 @Profile("test")
@@ -21,6 +20,7 @@ public class ServiceTestConfig {
     @Primary
     public TeacherRepository teacherRepository() {
         Teacher teacher = new Teacher();
+        teacher.setId("5");
         teacher.setName("Teacher 1");
 
         final TeacherRepository teacherRepositoryMock = mock(TeacherRepository.class);
@@ -28,8 +28,16 @@ public class ServiceTestConfig {
         when(teacherRepositoryMock.saveAndFlush(any(Teacher.class)))
                 .thenReturn(teacher);
 
-        when(Optional.of(teacherRepositoryMock.findById("5")).orElse(null))
-                .thenReturn(Optional.of(teacher));
+        when(teacherRepositoryMock.findAll())
+                .thenReturn(List.of(teacher, teacher, teacher));
+
+        when(teacherRepositoryMock.getReferenceById("5"))
+                .thenReturn(teacher);
+
+        doAnswer(invocation -> {
+            return null;
+                }
+        ).when(teacherRepositoryMock).deleteById("6");
 
         return teacherRepositoryMock;
     }
