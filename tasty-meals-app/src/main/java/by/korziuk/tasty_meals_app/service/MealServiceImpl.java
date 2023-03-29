@@ -5,10 +5,12 @@ import by.korziuk.tasty_meals_app.model.Meal;
 import by.korziuk.tasty_meals_app.repository.MealRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class MealServiceImpl implements MealService {
 
     private final MealRepository mealRepository;
