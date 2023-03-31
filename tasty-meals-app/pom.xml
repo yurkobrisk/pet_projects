@@ -27,6 +27,7 @@
 
 	<modules>
 		<module>meals-server</module>
+		<module>tastymealsapp</module>
 	</modules>
 
 	<properties>
