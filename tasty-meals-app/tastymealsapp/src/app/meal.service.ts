@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Meal } from './meal';
+import { environment } from 'src/environments/environments';
 
 
 @Injectable({
     providedIn: 'root'
 })
 export class MealService {
-    private apiServerUrl = '';
+    private apiServerUrl = environment.apiBaseUrl;
 
     constructor(private http: HttpClient) {}
 
