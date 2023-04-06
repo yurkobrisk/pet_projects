@@ -1,28 +1,161 @@
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<div class="container">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" style="color:white;">Meal Manager</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarColor02">
+     <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a (click)="onOpenModal([].constructor(), 'add')" class="nav-link" href="#">Add Meal 
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
+     </ul>
+     <form class="form-inline my-2 my-lg-0">
+        <input type="search"
+         name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search meals..." required>
+     </form>
+  </div>
+</nav>
+
+<div class="container" id="main-container">
     <div class="row">
         <!-- Product-->
         <div *ngFor="let meal of meals" class="col-lg-4 col-sm-6 mb-30">
             <div class="product-card mx-auto mb-3">
-                <div class="product-head d-flex justify-content-between align-items-center"><span class="badge badge-danger">Sale</span>
-                    <div  class="rating-stars">
-                      <i *ngFor="let rate of [].constructor(meal?.rating)" class="fa fa-star active"></i>
-                    </div>
+                <div class="product-head d-flex justify-content-end align-items-center">
+                  <div  class="rating-stars">
+                    <i *ngFor="let rate of [].constructor(meal?.rating)" class="fa fa-star active"></i>
+                  </div>
                 </div>
                 <a class="product-thumb" href="#"><img src="{{meal?.imageUrl}}" alt="Product Thumbnail"></a>
                 <div class="product-card-body"><a class="product-meta" href="#">{{meal?.description}}</a>
                     <h5 class="product-title"><a href="#">{{meal?.name}}</a></h5><span class="product-price">
-                    <del>$62.00</del>${{meal?.price}}</span>
+                    ${{meal?.price}}</span>
                 </div>
                 <div class="product-buttons-wrap">
-                    <div class="product-buttons">
-                        <div class="product-button"><a href="#"  ><i class="fa fa-heart"></i></a></div>
-                        <div class="product-button"><a href="#" ><i class="fa fa-repeat"></i></a></div>
-                        <div class="product-button"><a href="#" ><i class="fa fa-shopping-cart"></i></a></div>
-                    </div>
+                  <div class="product-buttons">
+                    <div (click)="onOpenModal(meal, 'edit')" class="product-button"><a href="#" ><i class="fa fa-pencil"></i></a></div>
+                    <div (click)="onOpenModal(meal, 'delete')" class="product-button"><a href="#" ><i class="fa fa-times"></i></a></div>
+                  </div>
                 </div>
             </div>
         </div>       
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.10.0/feather.js"></script>
+
+
+<!-- Add Meal Modal -->
+<div class="modal fade" id="addMealModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Add Meal</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" ngModel name="description" class="form-control" id="description" placeholder="Description" required>
+          </div>
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input type="text" ngModel name="price" class="form-control" id="price" placeholder="Price" required>
+          </div>
+          <div class="form-group">
+            <label for="rating">Rating</label>
+            <input type="text" ngModel name="rating" class="form-control" id="rating" placeholder="Rating" required>
+          </div>
+          <div class="form-group">
+            <label for="imageURL">Image URL</label>
+            <input type="text" ngModel name="imageURL" class="form-control" id="imageURL" placeholder="Image URL" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Meal Modal -->
+<div class="modal fade" id="updateMealModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">Update Meal</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
+          </div>
+          <input type="hidden" name="id" class="form-control" id="id" placeholder="Name" required>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" ngModel name="description" class="form-control" id="description" placeholder="Description" required>
+          </div>
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input type="text" ngModel name="price" class="form-control" id="price" placeholder="Price" required>
+          </div>
+          <div class="form-group">
+            <label for="rating">Rating</label>
+            <input type="text" ngModel name="rating" class="form-control" id="rating" placeholder="Rating" required>
+          </div>
+          <div class="form-group">
+            <label for="imageURL">Image URL</label>
+            <input type="text" ngModel name="imageURL" class="form-control" id="imageURL" placeholder="Image URL" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Meal Modal -->
+<div class="modal fade" id="deleteMealModal" tabindex="-1" role="dialog" aria-labelledby="deleteMealLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteMealLabel">Delete Meal</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete meal?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-danger">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-lg-12 col-md-12 col-xl-12">
+  <div class="alert alert-info" role="alert">
+    <h4 class="alert-heading">NO MEALS!</h4>
+    <p>No Meals were found.</p>
+  </div>
+</div>
