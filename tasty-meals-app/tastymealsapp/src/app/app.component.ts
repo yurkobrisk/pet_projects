@@ -12,6 +12,7 @@ import { NgForm } from '@angular/forms';
 export class AppComponent implements OnInit{
   public meals: Meal[] | undefined;
   public editMeal: Meal | undefined;
+  public deleteMeal: Meal | undefined;
 
   constructor(private mealService: MealService){}
 
@@ -83,6 +84,7 @@ export class AppComponent implements OnInit{
       button.setAttribute('data-target', '#updateMealModal');
     }
     if (mode === 'delete') {
+      this.deleteMeal = meal;
       button.setAttribute('data-target', '#deleteMealModal');
     }
     container?.appendChild(button);

@@ -144,12 +144,12 @@
         </button>
       </div>
       <div class="modal-body">
-        <p>Are you sure you want to delete meal?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-        <button type="button" class="btn btn-danger">Yes</button>
-      </div>
+        <p>Are you sure you want to delete {{deleteMeal?.name}}?</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button (click)="onDeleteMeal(deleteMeal!.id)" data-dismiss="modal" class="btn btn-danger">Yes</button>
+        </div>
+      </div>      
     </div>
   </div>
 </div>
