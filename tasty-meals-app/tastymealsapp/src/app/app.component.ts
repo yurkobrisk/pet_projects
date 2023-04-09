@@ -32,29 +32,41 @@ export class AppComponent implements OnInit{
 
   public onAddMeal(addForm: NgForm): void {
     document.getElementById('add-meal-form')?.click;
-    this.mealService.addMeal(addForm.value).subscribe(
-      (response: Meal) => {
+    this.mealService.addMeal(addForm.value).subscribe({
+      next: (response: Meal) => {
         console.log(response);
         this.getMeals();
         addForm.reset();
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         alert(error.message);
         addForm.reset();
       }
-    );
+    });
   }
 
   public onUpdateMeal(meal: Meal): void {    
-    this.mealService.updateMeal(meal).subscribe(
-      (response: Meal) => {
+    this.mealService.updateMeal(meal).subscribe({
+      next: (response: Meal) => {
         console.log(response);
         this.getMeals();
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         alert(error.message);
       }
-    );
+    });
+  }
+
+  public onDeleteMeal(mealId: number): void {    
+    this.mealService.deleteMeal(mealId).subscribe({
+      next: (response: void) => {
+        console.log(response);
+        this.getMeals();
+      },
+      error: (error: HttpErrorResponse) => {
+        alert(error.message)
+      }
+    });
   }
 
   public onOpenModal(meal: Meal, mode: string): void {
