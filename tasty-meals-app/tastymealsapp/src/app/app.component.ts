@@ -10,7 +10,7 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit{
-  public meals: Meal[] | undefined;
+  public meals: Meal[] = [];
   public editMeal: Meal | undefined;
   public deleteMeal: Meal | undefined;
 
@@ -68,6 +68,20 @@ export class AppComponent implements OnInit{
         alert(error.message)
       }
     });
+  }
+
+  public searchMeals(key: string): void {
+    const results: Meal[] = [];
+    for (const meal of this.meals) {
+      if (meal.name.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || meal.description.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
+        results.push(meal);
+      }
+    }
+    this.meals = results;
+    if (results.length === 0 || !key) {
+      this.getMeals();
+    }
   }
 
   public onOpenModal(meal: Meal, mode: string): void {
