@@ -30,3 +30,7 @@
 > ### [Password Generator Web App](https://github.com/yurkobrisk/pet_projects/tree/main/web-pass-generator)  🔑
 >
 >- The service generates a password depending on the set size.
+>- 
+> ### [REST Meal Manager App](https://github.com/yurkobrisk/pet_projects/tree/main/tasty-meals-app)  🍰
+>
+>- REST service to manage meals DB and have a simple UI.
