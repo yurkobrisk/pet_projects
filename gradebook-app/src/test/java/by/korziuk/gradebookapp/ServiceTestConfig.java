@@ -6,8 +6,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -24,15 +28,16 @@ public class ServiceTestConfig {
         teacher.setName("Teacher 1");
 
         final TeacherRepository teacherRepositoryMock = mock(TeacherRepository.class);
+        Page<Teacher> page = new PageImpl<>(List.of(teacher, teacher, teacher));
 
-        when(teacherRepositoryMock.saveAndFlush(any(Teacher.class)))
+        when(teacherRepositoryMock.save(any(Teacher.class)))
                 .thenReturn(teacher);
 
-        when(teacherRepositoryMock.findAll())
-                .thenReturn(List.of(teacher, teacher, teacher));
+        when(teacherRepositoryMock.findAll(any(PageRequest.class)))
+                .thenReturn(page);
 
-        when(teacherRepositoryMock.getReferenceById("5"))
-                .thenReturn(teacher);
+        when(teacherRepositoryMock.findById("5"))
+                .thenReturn(Optional.of(teacher));
 
         doAnswer(invocation -> {
             return null;

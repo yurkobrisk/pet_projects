@@ -6,16 +6,16 @@ import by.korziuk.gradebookapp.model.Exam;
 import by.korziuk.gradebookapp.model.Group;
 import by.korziuk.gradebookapp.model.Student;
 import by.korziuk.gradebookapp.model.Teacher;
+import by.korziuk.gradebookapp.service.implementation.TeacherServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.mockito.internal.verification.VerificationModeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -36,7 +36,7 @@ class TeacherServiceImplTest {
     void readTeacher() {
         //Given
         //When
-        Teacher teacher = teacherService.readTeacher("5");
+        Teacher teacher = teacherService.get("5");
         //Then
         assertThat(teacher.getId()).isNotNull();
         assertThat(teacher.getId()).isEqualTo("5");
@@ -49,20 +49,20 @@ class TeacherServiceImplTest {
         Teacher teacher = new Teacher();
         teacher.setName("Teacher 1");
         //When
-        Teacher savedTeacher = teacherService.saveTeacher(teacher);
+        Teacher savedTeacher = teacherService.create(teacher);
         //Then
         assertThat(savedTeacher).isNotNull();
         assertThat(savedTeacher.getName()).isEqualTo(teacher.getName());
     }
 
     @Test
-    @DisplayName("it should runs delete method two times")
+    @DisplayName("it should runs delete method three times")
     void deleteTeacher() {
         //Given
         //When
-        teacherService.deleteTeacher("6");
-        teacherService.deleteTeacher("6");
-        teacherService.deleteTeacher("6");
+        teacherService.delete("6");
+        teacherService.delete("6");
+        teacherService.delete("6");
         //Then
         verify(teacherRepository, times(3))
                 .deleteById("6");
@@ -73,14 +73,14 @@ class TeacherServiceImplTest {
     void findAllTeachers() {
         //Given
         //When
-        List<Teacher> allTeachers = teacherService.findAllTeachers();
+        Collection<Teacher> allTeachers = teacherService.list(5);
         //Then
         assertThat(allTeachers).isNotNull();
         assertThat(allTeachers.size()).isEqualTo(3);
-        assertThat(allTeachers.get(0).getName()).isEqualTo("Teacher 1");
+        assertThat(allTeachers.iterator().next().getName()).isEqualTo("Teacher 1");
         assertThat(catchNullPointerException(
-                () -> allTeachers.get(1).getGroups().size())).isInstanceOf(NullPointerException.class);
-        assertThat(allTeachers.get(1).getId()).isNull();
+                () -> allTeachers.iterator().next().getGroups().size())).isInstanceOf(NullPointerException.class);
+        assertThat(allTeachers.iterator().next().getSubjectName()).isNull();
     }
 
     private Teacher create(int id) {

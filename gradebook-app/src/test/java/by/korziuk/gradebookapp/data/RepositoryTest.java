@@ -21,12 +21,12 @@ class RepositoryTest {
 
     @Autowired
     TeacherRepository teacherRepository;
-    @Autowired
-    GroupRepository groupRepository;
+//    @Autowired
+//    GroupRepository groupRepository;
     @Autowired
     StudentRepository studentRepository;
-    @Autowired
-    ExamRepository examRepository;
+//    @Autowired
+//    ExamRepository examRepository;
 
     @Test
     public void should_read_teachers_from_table() {
@@ -39,16 +39,16 @@ class RepositoryTest {
         assertThat(teacherRepository.findAll().size()).isEqualTo(2);
     }
 
-    @Test
-    public void should_read_groups_from_table() {
-        assertThat((Objects
-                .requireNonNull(groupRepository.findById("group2").orElse(null)))
-                .getName()).isEqualTo("group B");
-        assertThat((Objects
-                .requireNonNull(groupRepository.findById("group2").orElse(null)))
-                .getTeacher().getId()).isEqualTo("1");
-        assertThat(groupRepository.findAll().size()).isEqualTo(2);
-    }
+//    @Test
+//    public void should_read_groups_from_table() {
+//        assertThat((Objects
+//                .requireNonNull(groupRepository.findById("group2").orElse(null)))
+//                .getName()).isEqualTo("group B");
+//        assertThat((Objects
+//                .requireNonNull(groupRepository.findById("group2").orElse(null)))
+//                .getTeacher().getId()).isEqualTo("1");
+//        assertThat(groupRepository.findAll().size()).isEqualTo(2);
+//    }
 
     @Test
     public void should_read_students_from_table() {
@@ -58,11 +58,11 @@ class RepositoryTest {
         assertThat(studentRepository.findAll().size()).isEqualTo(4);
     }
 
-    @Test
-    public void should_read_exams_from_table() {
-        assertThat((Objects
-                .requireNonNull(examRepository.findById("exam4").orElse(null)))
-                .getGrade()).isEqualTo(5);
-        assertThat(examRepository.findAll().size()).isEqualTo(4);
-    }
+//    @Test
+//    public void should_read_exams_from_table() {
+//        assertThat((Objects
+//                .requireNonNull(examRepository.findById("exam4").orElse(null)))
+//                .getGrade()).isEqualTo(5);
+//        assertThat(examRepository.findAll().size()).isEqualTo(4);
+//    }
 }

@@ -2,17 +2,17 @@ package by.korziuk.gradebookapp.service;
 
 import by.korziuk.gradebookapp.model.Teacher;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface TeacherService {
 
-    Teacher readTeacher(String id);
+    Teacher create(Teacher teacher);
 
-    Teacher saveTeacher(Teacher teacher);
+    Collection<Teacher> list(int limit);
 
-    Teacher updateTeacher(Teacher teacher);
+    Teacher get(String id);
 
-    void deleteTeacher(String id);
+    Teacher update(Teacher teacher);
 
-    List<Teacher> findAllTeachers();
+    Boolean delete(String id);
 }

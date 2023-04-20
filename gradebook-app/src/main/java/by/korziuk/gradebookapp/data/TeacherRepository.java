@@ -4,4 +4,5 @@ import by.korziuk.gradebookapp.model.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TeacherRepository extends JpaRepository<Teacher, String> {
+    Teacher findById(int id);
 }
