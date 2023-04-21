@@ -1,6 +1,8 @@
 package by.korziuk.gradebookapp;
 
+import by.korziuk.gradebookapp.data.StudentRepository;
 import by.korziuk.gradebookapp.data.TeacherRepository;
+import by.korziuk.gradebookapp.model.Student;
 import by.korziuk.gradebookapp.model.Teacher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +47,33 @@ public class ServiceTestConfig {
         ).when(teacherRepositoryMock).deleteById("6");
 
         return teacherRepositoryMock;
+    }
+
+    @Bean
+    @Primary
+    public StudentRepository studentRepository() {
+        Student student = new Student();
+        student.setId("4");
+        student.setName("Student 1");
+
+        final StudentRepository studentRepositoryMock = mock(StudentRepository.class);
+        Page<Student> page = new PageImpl<>(List.of(student, student, student, student));
+
+        when(studentRepositoryMock.save(any(Student.class)))
+                .thenReturn(student);
+
+        when(studentRepositoryMock.findAll(any(PageRequest.class)))
+                .thenReturn(page);
+
+        when(studentRepositoryMock.findById("4"))
+                .thenReturn(Optional.of(student));
+
+        doAnswer(invocation -> {
+                    return null;
+                }
+        ).when(studentRepositoryMock).deleteById("6");
+
+        return studentRepositoryMock;
     }
 
 }

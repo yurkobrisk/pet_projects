@@ -1,4 +1,4 @@
-package by.korziuk.gradebookapp.service;
+package by.korziuk.gradebookapp.service.implementation;
 
 import by.korziuk.gradebookapp.ServiceTestConfig;
 import by.korziuk.gradebookapp.data.TeacherRepository;
@@ -6,7 +6,7 @@ import by.korziuk.gradebookapp.model.Exam;
 import by.korziuk.gradebookapp.model.Group;
 import by.korziuk.gradebookapp.model.Student;
 import by.korziuk.gradebookapp.model.Teacher;
-import by.korziuk.gradebookapp.service.implementation.TeacherServiceImpl;
+import by.korziuk.gradebookapp.service.TeacherService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,8 +32,8 @@ class TeacherServiceImplTest {
     TeacherRepository teacherRepository;
 
     @Test
-    @DisplayName("it should return teacher when read method runs")
-    void readTeacher() {
+    @DisplayName("it should return teacher when get method runs")
+    void getTeacher() {
         //Given
         //When
         Teacher teacher = teacherService.get("5");
@@ -43,8 +43,8 @@ class TeacherServiceImplTest {
     }
 
     @Test
-    @DisplayName("it should return teacher when save method runs")
-    void saveTeacher() {
+    @DisplayName("it should return teacher when create method runs")
+    void createTeacher() {
         //Given
         Teacher teacher = new Teacher();
         teacher.setName("Teacher 1");
