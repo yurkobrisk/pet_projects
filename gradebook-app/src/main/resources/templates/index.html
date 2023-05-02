@@ -8,7 +8,7 @@
 </head>
 <body>
     <h3>This is index page!</h3>
-    <h4>reload live!</h4>
+    <h4 th:text="'number of theachers: ' + ${listOfTeachers.size()}">reload live!</h4>
 
     <table>
         <tr th:each="teacher : ${listOfTeachers}">
@@ -18,5 +18,8 @@
             <td th:text = "${teacher.getSubjectName()}"></td>
         </tr>
     </table>
+
+    <br>
+    <a href="/gradebook/teachers/add" role="button">Add teacher</a>
 </body>
 </html>

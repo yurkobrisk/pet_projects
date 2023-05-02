@@ -3,15 +3,10 @@ package by.korziuk.gradebookapp.controller;
 import by.korziuk.gradebookapp.model.Group;
 import by.korziuk.gradebookapp.model.Teacher;
 import by.korziuk.gradebookapp.service.TeacherService;
-import by.korziuk.gradebookapp.service.implementation.TeacherServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,18 +20,15 @@ public class controller {
 
     @GetMapping("/teachers")
     public String getAllTeachers(
-            @ModelAttribute String name,
-            Model model
-    ) {
-        //ToDo hardcoded list param. Solve it.
-        Collection<Teacher> teachers = teacherService.list(2);
-        teachers.forEach(System.out::println);
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            Model model) {
+        Collection<Teacher> teachers = teacherService.list(limit);
         model.addAttribute("listOfTeachers", teachers);
         return "index";
     }
 
     @PostMapping("/teachers")
-    public String newTeacher() {
+    public String addTeacher() {
 
         Teacher teacher = new Teacher();
         teacher.setName("Petr");
@@ -52,5 +44,9 @@ public class controller {
         return "index";
     }
 
-
+    @GetMapping("/teachers/add")
+    public String addTeacher(Model model) {
+        model.addAttribute("teacher", new Teacher());
+        return "add-teacher";
+    }
 }
