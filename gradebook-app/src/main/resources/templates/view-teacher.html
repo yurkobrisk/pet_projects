@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>View Teacher Page!</title>
+</head>
+<body>
+  <h1>It's view teacher Page!</h1>
+
+  <p>
+      Teacher ID is:
+      <input type="text" th:value="${teacher.getId()}">
+  </p>
+  <p>
+      Teacher name:
+      <input type="text" th:value="${teacher.getName()}">
+  </p>
+  <p>
+      Teacher surname:
+      <input type="text" th:value="${teacher.getLastName()}">
+  </p>
+  <p>
+      Teacher subject name:
+      <input type="text" th:value="${teacher.getSubjectName()}">
+  </p>
+  <p>
+      Teacher groups:
+      <input type="text" th:value="${teacher.getGroups()}">
+  </p>
+</body>
+</html>

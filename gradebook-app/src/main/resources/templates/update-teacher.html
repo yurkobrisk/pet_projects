@@ -3,14 +3,14 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Add Teacher</title>
+    <title>Update Teacher</title>
 </head>
 <body>
-  <h1>Add new teacher page!</h1>
+  <h1>Update teacher page!</h1>
 
-  <form action="#"  th:action="@{/gradebook/teachers/add}" th:object="${teacher}" method="post">
+  <form action="#"  th:action="@{/gradebook/teachers/{id}/update(id=${teacher.getId()})}" th:object="${teacher}" method="post">
       <p>Teacher ID is:
-          <input type="text" th:value="${teacher.getId()}">
+          <input type="text" th:value="${teacher.getId()}" th:field="*{id}">
       </p>
       <p>Teacher name:
           <input type="text" th:value="${teacher.getName()}" th:field="*{name}">

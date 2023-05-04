@@ -1,6 +1,5 @@
 package by.korziuk.gradebookapp.controller;
 
-import by.korziuk.gradebookapp.model.Group;
 import by.korziuk.gradebookapp.model.Teacher;
 import by.korziuk.gradebookapp.service.TeacherService;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
 
 @Controller
 @RequestMapping("/gradebook")
@@ -27,26 +25,55 @@ public class controller {
         return "index";
     }
 
-    @PostMapping("/teachers")
-    public String addTeacher() {
-
-        Teacher teacher = new Teacher();
-        teacher.setName("Petr");
-        teacher.setLastName("Ivanov");
-        teacher.setSubjectName("English");
-        Group group1 = new Group();
-        group1.setName("group 1");
-        Group group2 = new Group();
-        group2.setName("group 2");
-        teacher.setGroups(List.of(group1, group2));
-
-        teacherService.create(teacher);
-        return "index";
-    }
-
     @GetMapping("/teachers/add")
     public String addTeacher(Model model) {
         model.addAttribute("teacher", new Teacher());
         return "add-teacher";
+    }
+
+    @PostMapping("/teachers/add")
+    public String addTeacher(
+            @ModelAttribute("teacher") Teacher teacher
+    ) {
+        teacherService.create(teacher);
+        return "view-teacher";
+    }
+
+    @GetMapping("/teachers/{id}")
+    public String getTeacher(
+            @PathVariable("id") String id,
+            Model model
+    ) {
+        Teacher teacher = teacherService.get(id);
+        model.addAttribute("teacher", teacher);
+        return "view-teacher";
+    }
+
+    @GetMapping("/teachers/{id}/update")
+    public String updateTeacher(
+            @PathVariable("id") String id,
+            Model model
+    ) {
+        Teacher teacher = teacherService.get(id);
+        model.addAttribute("teacher", teacher);
+        return "update-teacher";
+    }
+
+    @PostMapping("/teachers/{id}/update")
+    public String updateTeacher(
+            @ModelAttribute("teacher") Teacher teacher
+    ) {
+        teacherService.update(teacher);
+        return "view-teacher";
+    }
+
+    @DeleteMapping("/teachers/{id}")
+    public String deleteTeacher(
+            @PathVariable("id") String id,
+            Model model
+    ) {
+        Boolean delete = teacherService.delete(id);
+        model.addAttribute("deleted", delete);
+        return "delete-teacher";
     }
 }
