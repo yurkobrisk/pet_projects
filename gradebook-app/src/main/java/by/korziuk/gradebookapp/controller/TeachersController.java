@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @Controller
-@RequestMapping("/gradebook")
+@RequestMapping("/gradebook/teachers")
 @RequiredArgsConstructor
-public class controller {
+public class TeachersController {
 
     private final TeacherService teacherService;
 
-    @GetMapping("/teachers")
+    @GetMapping("")
     public String getAllTeachers(
             @RequestParam(value = "limit", defaultValue = "10") int limit,
             Model model) {
@@ -25,13 +25,13 @@ public class controller {
         return "index";
     }
 
-    @GetMapping("/teachers/add")
+    @GetMapping("/add")
     public String addTeacher(Model model) {
         model.addAttribute("teacher", new Teacher());
         return "add-teacher";
     }
 
-    @PostMapping("/teachers/add")
+    @PostMapping("/add")
     public String addTeacher(
             @ModelAttribute("teacher") Teacher teacher
     ) {
@@ -39,7 +39,7 @@ public class controller {
         return "view-teacher";
     }
 
-    @GetMapping("/teachers/{id}")
+    @GetMapping("/{id}")
     public String getTeacher(
             @PathVariable("id") String id,
             Model model
@@ -49,7 +49,7 @@ public class controller {
         return "view-teacher";
     }
 
-    @GetMapping("/teachers/{id}/update")
+    @GetMapping("/{id}/update")
     public String updateTeacher(
             @PathVariable("id") String id,
             Model model
@@ -59,7 +59,7 @@ public class controller {
         return "update-teacher";
     }
 
-    @PostMapping("/teachers/{id}/update")
+    @PostMapping("/{id}/update")
     public String updateTeacher(
             @ModelAttribute("teacher") Teacher teacher
     ) {
@@ -67,7 +67,7 @@ public class controller {
         return "view-teacher";
     }
 
-    @DeleteMapping("/teachers/{id}")
+    @DeleteMapping("/{id}")
     public String deleteTeacher(
             @PathVariable("id") String id,
             Model model

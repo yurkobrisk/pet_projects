@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Update Student</title>
+</head>
+<body>
+  <h1>Update student page!</h1>
+
+  <form action="#"  th:action="@{/gradebook/students/{id}/update(id=${student.getId()})}" th:object="${student}" method="post">
+      <p>Student ID is:
+          <input type="text" th:value="${student.getId()}" th:field="*{id}">
+      </p>
+      <p>Student name:
+          <input type="text" th:value="${student.getName()}" th:field="*{name}">
+      </p>
+      <p>Student last name:
+          <input type="text" th:value="${student.getLastName()}" th:field="*{lastName}">
+      </p>
+      <p>Student exams:
+<!--          ToDo think about exams array-->
+<!--          <input type="text" th:value="${student.getExams()}" th:field="*{exams}">-->
+      </p>
+      <p>Student group:
+          <input type="text" th:value="${student.getGroup()}">
+      </p>
+
+      <div>
+          <input type="submit" value="Save student">
+      </div>
+  </form>
+
+  <a href="/gradebook/students" role="button">Back to students list</a>
+</body>
+</html>

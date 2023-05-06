@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>List of students</title>
+</head>
+<body>
+    <h3>This is a students list page!</h3>
+    <h4 th:text="'number of students: ' + ${listOfStudents.size()}">reload live!</h4>
+
+    <table>
+        <tr th:each="student : ${listOfStudents}">
+            <td th:text = "${student.getId()}"></td>
+            <td th:text = "${student.getName()}"></td>
+            <td th:text = "${student.getLastName()}"></td>
+            <td th:text = "${student.getGroup()}"></td>
+            <td th:text = "${student.getExams()}"></td>
+        </tr>
+    </table>
+
+    <br>
+    <a href="/gradebook/students/add" role="button">Add student</a>
+</body>
+</html>

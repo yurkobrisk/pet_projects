@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>View Student Page!</title>
+</head>
+<body>
+  <h1>It's view student page!</h1>
+
+  <p>
+      Student ID is:
+      <input type="text" th:value="${student.getId()}">
+  </p>
+  <p>
+      Student name:
+      <input type="text" th:value="${student.getName()}">
+  </p>
+  <p>
+      Student surname:
+      <input type="text" th:value="${student.getLastName()}">
+  </p>
+  <p>
+      Student exams:
+      <!--  ToDo fix view then exams are empty or null -->
+<!--      <input type="text" th:value="${student.getExams()}">-->
+  </p>
+  <p>
+      Student group:
+      <!--  ToDo fix view then group is empty or null -->
+<!--      <input type="text" th:value="${student.getGroup().getName()}">-->
+  </p>
+</body>
+</html>

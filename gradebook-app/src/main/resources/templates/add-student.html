@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Student</title>
+</head>
+<body>
+  <h1>Add new student page!</h1>
+
+  <form action="#"  th:action="@{/gradebook/students/add}" th:object="${student}" method="post">
+      <p>Student ID is:
+          <input type="text" th:value="${student.getId()}">
+      </p>
+      <p>Student name:
+          <input type="text" th:value="${student.getName()}" th:field="*{name}">
+      </p>
+      <p>Student last name:
+          <input type="text" th:value="${student.getLastName()}" th:field="*{lastName}">
+      </p>
+      <p>Student groups:
+          <select th:field="*{group}">
+              <option th:each="group : ${groups}"
+                      th:text = "${group.getId()} + ' ' +${group.getName()}"
+                      th:value="${group.getId()}"></option>
+          </select>
+      </p>
+
+
+      <div>
+          <input type="submit" value="Save student">
+      </div>
+  </form>
+
+  <a href="/gradebook/students" role="button">Back to students list</a>
+</body>
+</html>
