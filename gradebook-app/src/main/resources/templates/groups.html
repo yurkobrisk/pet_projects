@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>List of groups</title>
+</head>
+<body>
+    <h3>This is a group list page!</h3>
+    <h4 th:text="'number of groups: ' + ${listOfGroups.size()}">reload live!</h4>
+
+    <table>
+        <tr th:each="group : ${listOfGroups}">
+            <td th:text = "${group.getId()}"></td>
+            <td th:text = "${group.getName()}"></td>
+<!--            <td th:text = "${group.getStudents()}"></td>-->
+<!--            <td th:text = "${group.getTeacher()}"></td>-->
+        </tr>
+    </table>
+
+    <br>
+    <a href="/gradebook/groups/add" role="button">Add group</a>
+</body>
+</html>

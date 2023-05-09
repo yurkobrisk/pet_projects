@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Group</title>
+</head>
+<body>
+  <h1>Add new group page!</h1>
+
+  <form action="#"  th:action="@{/gradebook/groups/add}" th:object="${group}" method="post">
+      <p>Group ID is:
+          <input type="text" th:value="${group.getId()}">
+      </p>
+      <p>Group name:
+          <input type="text" th:value="${group.getName()}" th:field="*{name}">
+      </p>
+      <p>Group teacher:
+          <select th:field="*{teacher}">
+              <option th:each="teacher : ${teachers}"
+                      th:text = "${teacher.getName()} + ' ' +${teacher.getLastName()} + ' ' + ${teacher.getSubjectName()}"
+                      th:value="${teacher.getId()}"></option>
+          </select>
+      </p>
+      <p>Group students:
+<!--          <input type="text" th:value="${group.getStudents()}" th:field="*{students}">-->
+      </p>
+
+
+      <div>
+          <input type="submit" value="Save group">
+      </div>
+  </form>
+
+  <a href="/gradebook/groups" role="button">Back to group list</a>
+</body>
+</html>

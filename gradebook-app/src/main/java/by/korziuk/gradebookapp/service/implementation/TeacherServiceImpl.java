@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.List;
 
 import static java.lang.Boolean.*;
 
@@ -29,8 +30,14 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Collection<Teacher> list(int limit) {
-        log.info("Fetching all teachers");
+        log.info("Fetching {} teachers", limit);
         return teacherRepository.findAll(PageRequest.of(0, limit)).toList();
+    }
+
+    @Override
+    public List<Teacher> list() {
+        log.info("Fetching all teachers");
+        return teacherRepository.findAll();
     }
 
     @Override

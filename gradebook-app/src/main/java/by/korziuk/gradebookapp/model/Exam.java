@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
@@ -27,7 +28,7 @@ public class Exam {
     @Column(name = "E_GRADE")
     @NotEmpty(message = "Grade cannot be empty or null")
     private int grade;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "S_ID")
     private Student student;
 }

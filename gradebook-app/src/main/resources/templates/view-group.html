@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>View Group Page!</title>
+</head>
+<body>
+  <h1>It's view group page!</h1>
+
+  <p>
+      Group ID is:
+      <input type="text" th:value="${group.getId()}">
+  </p>
+  <p>
+      Group name:
+      <input type="text" th:value="${group.getName()}">
+  </p>
+  <p>
+      Group teacher:
+<!--      <input type="text" th:value="${group.getTeacher()}">-->
+  </p>
+  <p>
+      Group students:
+<!--      <input type="text" th:value="${group.getStudents()}">-->
+  </p>
+</body>
+</html>

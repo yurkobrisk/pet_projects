@@ -22,7 +22,9 @@
           <input type="text" th:value="${teacher.getSubjectName()}" th:field="*{subjectName}">
       </p>
       <p>Teacher groups:
-          <input type="text" th:value="${teacher.getGroups()}">
+        <ul th:each="group : ${teacher.getGroups()}">
+          <li th:text="${group.getName()}"></li>
+        </ul>
       </p>
 
       <div>

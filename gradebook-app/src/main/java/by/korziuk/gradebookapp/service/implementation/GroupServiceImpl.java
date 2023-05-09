@@ -17,9 +17,16 @@ import java.util.Collection;
 public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
+
     @Override
     public Collection<Group> list() {
         log.info("Fetching all groups");
         return groupRepository.findAll();
+    }
+
+    @Override
+    public Group create(Group group) {
+        log.info("Saving new group: {}", group.getName());
+        return groupRepository.save(group);
     }
 }

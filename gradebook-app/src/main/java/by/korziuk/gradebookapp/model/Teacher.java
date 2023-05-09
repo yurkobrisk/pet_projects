@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -30,6 +31,6 @@ public class Teacher {
     @Column(name = "TEACHER_SUBJECTNAME")
     @NotEmpty(message = "Subject cannot be empty or null")
     private String subjectName;
-    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "teacher")
     private List<Group> groups;
 }
