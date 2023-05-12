@@ -30,7 +30,7 @@ public class Student {
     private String lastName;
     @OneToMany(mappedBy = "student")
     private List<Exam> exams;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinColumn(name = "G_ID")
     private Group group;
 }

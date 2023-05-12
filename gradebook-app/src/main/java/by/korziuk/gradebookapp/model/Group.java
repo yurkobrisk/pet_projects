@@ -27,7 +27,7 @@ public class Group {
     private String name;
     @OneToMany(mappedBy = "group")
     private List<Student> students;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinColumn(name = "TEACHER_ID")
     private Teacher teacher;
 }

@@ -43,4 +43,42 @@ public class GroupController {
         groupService.create(group);
         return "view-group";
     }
+
+    @GetMapping("/{id}")
+    public String getGroup(
+            @PathVariable("id") String id,
+            Model model
+    ) {
+        Group group = groupService.get(id);
+        model.addAttribute("group", group);
+        return "view-group";
+    }
+
+    @GetMapping("/{id}/update")
+    public String updateGroup(
+            @PathVariable("id") String id,
+            Model model
+    ) {
+        Group group = groupService.get(id);
+        model.addAttribute("group", group);
+        return "update-group";
+    }
+
+    @PostMapping("/{id}/update")
+    public String updateGroup(
+            @ModelAttribute("group") Group group
+    ) {
+        groupService.update(group);
+        return "view-group";
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteGroup(
+            @PathVariable("id") String id,
+            Model model
+    ) {
+        Boolean delete = groupService.delete(id);
+        model.addAttribute("deleted", delete);
+        return "delete-group";
+    }
 }

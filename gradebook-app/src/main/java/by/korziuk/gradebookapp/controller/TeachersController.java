@@ -1,6 +1,8 @@
 package by.korziuk.gradebookapp.controller;
 
+import by.korziuk.gradebookapp.model.Group;
 import by.korziuk.gradebookapp.model.Teacher;
+import by.korziuk.gradebookapp.service.GroupService;
 import by.korziuk.gradebookapp.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,7 @@ import java.util.Collection;
 public class TeachersController {
 
     private final TeacherService teacherService;
+    private final GroupService groupService;
 
     @GetMapping("")
     public String getAllTeachers(

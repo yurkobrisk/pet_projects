@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Update Group</title>
+</head>
+<body>
+  <h1>Update group page!</h1>
+
+  <form action="#"  th:action="@{/gradebook/groups/{id}/update(id=${group.getId()})}" th:object="${group}" method="post">
+      <p>Group ID is:
+          <input type="text" th:value="${group.getId()}" th:field="*{id}">
+      </p>
+      <p>Group name:
+          <input type="text" th:value="${group.getName()}" th:field="*{name}">
+      </p>
+<!--      <p>Group's teacher name:-->
+<!--          <input type="text" th:value="${group.getTeacher()}" th:field="*{teacher}">-->
+<!--      </p>-->
+<!--      <p>Group's students:-->
+<!--        <ul th:each="student : ${group.getStudents()}">-->
+<!--          <li th:text="${student.getName()} + ' ' + ${student.getLastName()}"></li>-->
+<!--        </ul>-->
+<!--      </p>-->
+
+      <div>
+          <input type="submit" value="Save group">
+      </div>
+  </form>
+
+  <a href="/gradebook/teachers" role="button">Back to teachers list</a>
+</body>
+</html>

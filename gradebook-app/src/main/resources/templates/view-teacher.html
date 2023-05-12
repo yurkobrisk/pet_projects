@@ -24,11 +24,8 @@
       Teacher subject name:
       <input type="text" th:value="${teacher.getSubjectName()}">
   </p>
-  <p>
-      Teacher groups:
-      <ul th:each="group : ${teacher.getGroups()}">
-        <li th:text="${group.getName()}"></li>
-      </ul>
-  </p>
+
+  <a href="/gradebook/teachers" role="button">Back to teachers list</a>
+  <a href="/gradebook/teachers/add" role="button">Add teacher</a>
 </body>
 </html>

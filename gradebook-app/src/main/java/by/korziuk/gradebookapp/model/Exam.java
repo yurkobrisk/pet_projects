@@ -28,7 +28,7 @@ public class Exam {
     @Column(name = "E_GRADE")
     @NotEmpty(message = "Grade cannot be empty or null")
     private int grade;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinColumn(name = "S_ID")
     private Student student;
 }
