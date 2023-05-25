@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "T_STUDENTS")
-public class Student {
+public class Student implements Serializable{
 
     @Id
     @GeneratedValue(generator = "uuid-generator")
@@ -30,7 +30,7 @@ public class Student {
     private String lastName;
     @OneToMany(mappedBy = "student")
     private List<Exam> exams;
-    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "G_ID")
     private Group group;
 }

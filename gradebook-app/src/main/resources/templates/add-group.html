@@ -9,14 +9,13 @@
   <h1>Add new group page!</h1>
 
   <form action="#"  th:action="@{/gradebook/groups/add}" th:object="${group}" method="post">
-      <p>Group ID is:
-          <input type="text" th:value="${group.getId()}">
-      </p>
+
       <p>Group name:
           <input type="text" th:value="${group.getName()}" th:field="*{name}">
       </p>
-      <p>Group teacher:
+      <p>Teacher:
           <select th:field="*{teacher}">
+              <option value="" selected>--Please choose a teacher--</option>
               <option th:each="teacher : ${teachers}"
                       th:text = "${teacher.getName()} + ' ' +${teacher.getLastName()} + ' ' + ${teacher.getSubjectName()}"
                       th:value="${teacher.getId()}"></option>
@@ -25,7 +24,6 @@
       <p>Group students:
 <!--          <input type="text" th:value="${group.getStudents()}" th:field="*{students}">-->
       </p>
-
 
       <div>
           <input type="submit" value="Save group">

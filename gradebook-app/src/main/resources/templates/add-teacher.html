@@ -9,19 +9,15 @@
   <h1>Add new teacher page!</h1>
 
   <form action="#"  th:action="@{/gradebook/teachers/add}" th:object="${teacher}" method="post">
-      <p>Teacher ID is:
-          <input type="text" th:value="${teacher.getId()}">
-      </p>
-      <p>Teacher name:
+      <p>Name:
           <input type="text" th:value="${teacher.getName()}" th:field="*{name}">
       </p>
-      <p>Teacher last name:
+      <p>Last Name:
           <input type="text" th:value="${teacher.getLastName()}" th:field="*{lastName}">
       </p>
-      <p>Teacher subject name:
+      <p>Subject:
           <input type="text" th:value="${teacher.getSubjectName()}" th:field="*{subjectName}">
       </p>
-
       <div>
           <input type="submit" value="Save teacher">
       </div>

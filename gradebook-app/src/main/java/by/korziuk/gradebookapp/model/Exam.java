@@ -15,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "T_EXAMS")
-public class Exam {
+public class Exam implements Serializable{
 
     @Id
     @GeneratedValue(generator = "uuid-generator")

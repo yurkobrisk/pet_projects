@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "T_GROUPS")
-public class Group {
+public class Group implements Serializable{
 
     @Id
     @GeneratedValue(generator = "uuid-generator")
@@ -25,9 +26,9 @@ public class Group {
     @Column(name = "G_NAME", unique = true)
     @NotEmpty(message = "Group name cannot be empty or null")
     private String name;
-    @OneToMany(mappedBy = "group")
-    private List<Student> students;
-    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Student> students = new ArrayList<>();
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "TEACHER_ID")
     private Teacher teacher;
 }

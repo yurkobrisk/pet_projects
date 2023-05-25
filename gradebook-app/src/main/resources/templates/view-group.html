@@ -8,21 +8,16 @@
 <body>
   <h1>It's view group page!</h1>
 
-  <p>
-      Group ID is:
-      <input type="text" th:value="${group.getId()}">
+  <p th:text="'Group ID is: ' + ${group.getId()}"> </p>
+  <p th:text="'Group name: ' + ${group.getName()}"> </p>
+  <p th:text="'Teacher: ' + ${group.getTeacher().getName()} + ' ' + ${group.getTeacher().getLastName()}"
+     th:unless="${group.teacher} == null">
   </p>
-  <p>
-      Group name:
-      <input type="text" th:value="${group.getName()}">
+  <p>Students:
+  <ul th:each="student : ${group.getStudents()}" th:text="${student.getName()} + ' ' + ${student.getLastName()}"></ul>
   </p>
-  <p>
-      Group teacher:
-<!--      <input type="text" th:value="${group.getTeacher()}">-->
-  </p>
-  <p>
-      Group students:
-<!--      <input type="text" th:value="${group.getStudents()}">-->
-  </p>
+
+  <a href="/gradebook/groups" role="button">Back to group list</a>
+  <a href="/gradebook/groups/add" role="button">Add group</a>
 </body>
 </html>

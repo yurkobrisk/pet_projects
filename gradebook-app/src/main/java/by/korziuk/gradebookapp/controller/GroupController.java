@@ -1,10 +1,11 @@
 package by.korziuk.gradebookapp.controller;
 
 import by.korziuk.gradebookapp.model.Group;
-import by.korziuk.gradebookapp.model.Student;
 import by.korziuk.gradebookapp.model.Teacher;
 import by.korziuk.gradebookapp.service.GroupService;
 import by.korziuk.gradebookapp.service.TeacherService;
+import by.korziuk.gradebookapp.dto.GroupTeacherDTO;
+import by.korziuk.gradebookapp.service.mapper.MapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,12 @@ public class GroupController {
 
     private final GroupService groupService;
     private final TeacherService teacherService;
+    private final MapService mapService;
+    private final Teacher teacher = new Teacher(
+            "default id",
+            "default name",
+            "default last name",
+            "default subject", null);
 
     @GetMapping("")
     public String getAllGroups(Model model) {
@@ -40,6 +47,12 @@ public class GroupController {
     public String addGroup(
             @ModelAttribute("group") Group group
     ) {
+        if (groupService.existsGroupByName(group.getName())) {
+            return "view-group";
+        }
+        if (group.getTeacher() == null) {
+            group.setTeacher(teacherService.create(teacher));
+        }
         groupService.create(group);
         return "view-group";
     }
@@ -56,18 +69,24 @@ public class GroupController {
 
     @GetMapping("/{id}/update")
     public String updateGroup(
-            @PathVariable("id") String id,
-            Model model
-    ) {
-        Group group = groupService.get(id);
-        model.addAttribute("group", group);
-        return "update-group";
-    }
+        @PathVariable("id") String id,
+        Model model
+) {
+    Group group = groupService.get(id);
+    GroupTeacherDTO dto = mapService.toDto(group);
+    List<Teacher> teachers = teacherService.list();
+    model.addAttribute("dto", dto);
+    model.addAttribute("teachers", teachers);
+    return "update-group";
+}
 
     @PostMapping("/{id}/update")
     public String updateGroup(
-            @ModelAttribute("group") Group group
+            @ModelAttribute("dto") GroupTeacherDTO dto,
+            Model model
     ) {
+        Group group = mapService.toGroup(dto);
+        model.addAttribute("group", group);
         groupService.update(group);
         return "view-group";
     }

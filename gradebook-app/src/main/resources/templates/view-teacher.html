@@ -8,21 +8,12 @@
 <body>
   <h1>It's view teacher Page!</h1>
 
-  <p>
-      Teacher ID is:
-      <input type="text" th:value="${teacher.getId()}">
-  </p>
-  <p>
-      Teacher name:
-      <input type="text" th:value="${teacher.getName()}">
-  </p>
-  <p>
-      Teacher surname:
-      <input type="text" th:value="${teacher.getLastName()}">
-  </p>
-  <p>
-      Teacher subject name:
-      <input type="text" th:value="${teacher.getSubjectName()}">
+  <p th:text="'Teacher ID is: ' + ${teacher.getId()}"></p>
+  <p th:text="'Name: ' + ${teacher.getName()}"></p>
+  <p th:text="'Surname: ' + ${teacher.getLastName()}"></p>
+  <p th:text="'Subject: ' + ${teacher.getSubjectName()}"></p>
+  <p>Groups:
+    <ul th:each="group : ${teacher.getGroups()}" th:text="${group.getName()}"></ul>
   </p>
 
   <a href="/gradebook/teachers" role="button">Back to teachers list</a>
