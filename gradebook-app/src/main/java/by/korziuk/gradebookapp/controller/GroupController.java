@@ -22,11 +22,6 @@ public class GroupController {
     private final GroupService groupService;
     private final TeacherService teacherService;
     private final MapService mapService;
-    private final Teacher teacher = new Teacher(
-            "default id",
-            "default name",
-            "default last name",
-            "default subject", null);
 
     @GetMapping("")
     public String getAllGroups(Model model) {
@@ -49,9 +44,6 @@ public class GroupController {
     ) {
         if (groupService.existsGroupByName(group.getName())) {
             return "view-group";
-        }
-        if (group.getTeacher() == null) {
-            group.setTeacher(teacherService.create(teacher));
         }
         groupService.create(group);
         return "view-group";

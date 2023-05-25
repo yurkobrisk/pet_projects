@@ -8,18 +8,9 @@
 <body>
   <h1>It's view student page!</h1>
 
-  <p>
-      Student ID is:
-      <input type="text" th:value="${student.getId()}">
-  </p>
-  <p>
-      Student name:
-      <input type="text" th:value="${student.getName()}">
-  </p>
-  <p>
-      Student surname:
-      <input type="text" th:value="${student.getLastName()}">
-  </p>
+  <p th:text="'Student ID is: ' + ${student.getId()}"></p>
+  <p th:text="'Name:' + ${student.getName()}"></p>
+  <p th:text="'Surnamr' + ${student.getLastName()}"></p>
   <p>
       Student exams:
       <!--  ToDo fix view then exams are empty or null -->
