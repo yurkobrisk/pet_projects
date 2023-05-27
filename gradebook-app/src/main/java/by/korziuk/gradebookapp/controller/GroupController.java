@@ -4,7 +4,7 @@ import by.korziuk.gradebookapp.model.Group;
 import by.korziuk.gradebookapp.model.Teacher;
 import by.korziuk.gradebookapp.service.GroupService;
 import by.korziuk.gradebookapp.service.TeacherService;
-import by.korziuk.gradebookapp.dto.GroupTeacherDTO;
+import by.korziuk.gradebookapp.dto.GroupDTO;
 import by.korziuk.gradebookapp.service.mapper.MapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -65,7 +65,7 @@ public class GroupController {
         Model model
 ) {
     Group group = groupService.get(id);
-    GroupTeacherDTO dto = mapService.toDto(group);
+    GroupDTO dto = mapService.toDto(group);
     List<Teacher> teachers = teacherService.list();
     model.addAttribute("dto", dto);
     model.addAttribute("teachers", teachers);
@@ -74,7 +74,7 @@ public class GroupController {
 
     @PostMapping("/{id}/update")
     public String updateGroup(
-            @ModelAttribute("dto") GroupTeacherDTO dto,
+            @ModelAttribute("dto") GroupDTO dto,
             Model model
     ) {
         Group group = mapService.toGroup(dto);

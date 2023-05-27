@@ -9,9 +9,7 @@
   <h1>Add new student page!</h1>
 
   <form action="#"  th:action="@{/gradebook/students/add}" th:object="${student}" method="post">
-      <p>Student ID is:
-          <input type="text" th:value="${student.getId()}">
-      </p>
+
       <p>Student name:
           <input type="text" th:value="${student.getName()}" th:field="*{name}">
       </p>
@@ -20,12 +18,12 @@
       </p>
       <p>Student groups:
           <select th:field="*{group}">
+              <option value="" selected>--Please choose a group--</option>
               <option th:each="group : ${groups}"
                       th:text = "${group.getId()} + ' ' +${group.getName()}"
                       th:value="${group.getId()}"></option>
           </select>
       </p>
-
 
       <div>
           <input type="submit" value="Save student">

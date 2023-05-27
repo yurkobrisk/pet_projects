@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupTeacherDTO {
+public class StudentDTO {
     private String id;
     private String name;
-    private String teacherId;
+    private String lastName;
+    private String groupId;
 }

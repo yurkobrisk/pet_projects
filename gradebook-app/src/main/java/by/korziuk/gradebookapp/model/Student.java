@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,8 +29,8 @@ public class Student implements Serializable{
     @Column(name = "S_LASTNAME")
     @NotEmpty(message = "Surname cannot be empty or null")
     private String lastName;
-    @OneToMany(mappedBy = "student")
-    private List<Exam> exams;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Exam> exams = new ArrayList<>();
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "G_ID")
     private Group group;

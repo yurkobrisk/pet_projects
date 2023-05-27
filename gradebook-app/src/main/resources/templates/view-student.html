@@ -9,17 +9,17 @@
   <h1>It's view student page!</h1>
 
   <p th:text="'Student ID is: ' + ${student.getId()}"></p>
-  <p th:text="'Name:' + ${student.getName()}"></p>
-  <p th:text="'Surnamr' + ${student.getLastName()}"></p>
+  <p th:text="'Name: ' + ${student.getName()}"></p>
+  <p th:text="'Surname: ' + ${student.getLastName()}"></p>
+  <p th:text="'Group: ' + ${student.getGroup().getName()}" th:unless="${student.group} == null"></p>
   <p>
       Student exams:
       <!--  ToDo fix view then exams are empty or null -->
 <!--      <input type="text" th:value="${student.getExams()}">-->
-  </p>
+
   <p>
-      Student group:
-      <!--  ToDo fix view then group is empty or null -->
-<!--      <input type="text" th:value="${student.getGroup().getName()}">-->
+      <a href="/gradebook/students" role="button">Back to students list</a>
+      <a href="/gradebook/students/add" role="button">Add student</a>
   </p>
 </body>
 </html>

@@ -1,15 +1,18 @@
 package by.korziuk.gradebookapp.controller;
 
+import by.korziuk.gradebookapp.dto.StudentDTO;
 import by.korziuk.gradebookapp.model.Group;
 import by.korziuk.gradebookapp.model.Student;
 import by.korziuk.gradebookapp.service.GroupService;
 import by.korziuk.gradebookapp.service.StudentService;
+import by.korziuk.gradebookapp.service.mapper.MapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @Controller
 @RequestMapping("/gradebook/students")
@@ -18,6 +21,7 @@ public class StudentController {
 
     private final StudentService studentService;
     private final GroupService groupService;
+    private final MapService mapService;
 
     @GetMapping("")
     public String getAllStudents(
@@ -60,14 +64,20 @@ public class StudentController {
             Model model
     ) {
         Student student = studentService.get(id);
-        model.addAttribute("student", student);
+        StudentDTO dto = mapService.toDto(student);
+        List<Group> groups = groupService.list();
+        model.addAttribute("dto", dto);
+        model.addAttribute("groups", groups);
         return "update-student";
     }
 
     @PostMapping("/{id}/update")
     public String updateStudent(
-            @ModelAttribute("student") Student student
+            @ModelAttribute("dto") StudentDTO dto,
+            Model model
     ) {
+        Student student = mapService.toStudent(dto);
+        model.addAttribute("student", student);
         studentService.update(student);
         return "view-student";
     }

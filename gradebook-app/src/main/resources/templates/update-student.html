@@ -8,22 +8,33 @@
 <body>
   <h1>Update student page!</h1>
 
-  <form action="#"  th:action="@{/gradebook/students/{id}/update(id=${student.getId()})}" th:object="${student}" method="post">
-      <p>Student ID is:
-          <input type="text" th:value="${student.getId()}" th:field="*{id}">
-      </p>
+  <form action="#"  th:action="@{/gradebook/students/{id}/update(id=${dto.getId()})}" method="post">
+      <p th:text="'Student ID is: ' + ${dto.getId()}"> </p>
       <p>Student name:
-          <input type="text" th:value="${student.getName()}" th:field="*{name}">
+          <input type="text" th:value="${dto.getName()}" th:field="*{dto.name}">
       </p>
       <p>Student last name:
-          <input type="text" th:value="${student.getLastName()}" th:field="*{lastName}">
+          <input type="text" th:value="${dto.getLastName()}" th:field="*{dto.lastName}">
       </p>
       <p>Student exams:
 <!--          ToDo think about exams array-->
 <!--          <input type="text" th:value="${student.getExams()}" th:field="*{exams}">-->
       </p>
-      <p>Student group:
-          <input type="text" th:value="${student.getGroup()}">
+      <p>Group:
+<!--          if group == null-->
+          <select th:field="*{dto.groupId}" th:if="${dto.getGroupId()} == null">
+              <option value="">--Please choose a teacher--</option>
+              <option th:each="group : ${groups}" th:text = "${group.getName()}" th:value="${group.getId()}" ></option>
+          </select>
+<!--          if group != null-->
+          <select th:field="*{dto.groupId}" th:unless="${dto.getGroupId()} == null">
+              <option th:each="group : ${groups}"
+                      th:text = "${group.getName()}"
+                      th:value="${group.id}"
+                      th:selected="${dto.getGroupId()} == ${group.getId()}">
+              </option>
+          </select>
+      </p>
       </p>
 
       <div>
