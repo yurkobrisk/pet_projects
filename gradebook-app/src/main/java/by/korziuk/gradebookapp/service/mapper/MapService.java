@@ -2,6 +2,7 @@ package by.korziuk.gradebookapp.service.mapper;
 
 import by.korziuk.gradebookapp.data.GroupRepository;
 import by.korziuk.gradebookapp.data.TeacherRepository;
+import by.korziuk.gradebookapp.dto.GroupExamsDTO;
 import by.korziuk.gradebookapp.dto.StudentDTO;
 import by.korziuk.gradebookapp.model.Group;
 import by.korziuk.gradebookapp.model.Student;
@@ -51,5 +52,24 @@ public class MapService {
         log.info("Converting to Student. Fetching group by ID: {}", dto.getGroupId());
         Group group = groupRepository.findById(dto.getGroupId()).orElse(null);
         return new Student(dto.getId(), dto.getName(), dto.getLastName(), new ArrayList<>(), group);
+    }
+
+    public GroupExamsDTO toExamsDto(Group group) {
+        log.info("Converting to exams DTO. Getting group with ID: {}", group.getId());
+        if (group.getTeacher() == null) {
+            if (group.getStudents() == null) {
+                return new GroupExamsDTO(group.getId(), group.getName(), "", "", null);
+            } else {
+                return new GroupExamsDTO(group.getId(), group.getName(), "", "", group.getStudents());
+            }
+        } else {
+            if (group.getStudents() == null) {
+                return new GroupExamsDTO(group.getId(), group.getName(),
+                        group.getTeacher().getId(), group.getTeacher().getName(), null);
+            } else {
+                return new GroupExamsDTO(group.getId(), group.getName(),
+                        group.getTeacher().getId(), group.getTeacher().getName(), group.getStudents());
+            }
+        }
     }
 }

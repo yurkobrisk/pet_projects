@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>View Group Exams Page!</title>
+</head>
+<body>
+  <h1>It's view group exams page!</h1>
+
+  <p th:text="'Group ID is: ' + ${dto.getId()}"> </p>
+  <p th:text="'Group name: ' + ${dto.getName()}"> </p>
+  <p th:text="'Teacher: ' + ${dto.getTeacherId()} + ' ' + ${dto.getTeacherName()}"
+     th:unless="${dto.teacherId} == null">
+  </p>
+  <p>Students:
+  <ul th:each="student : ${dto.getStudents()}" th:text="${student.getName()} + ' ' + ${student.getLastName()}"
+  th:unless="${dto.students} == null"></ul>
+  </p>
+
+  <a href="/gradebook/groups" role="button">Back to group list</a>
+  <a href="/gradebook/groups/add" role="button">Add group</a>
+</body>
+</html>

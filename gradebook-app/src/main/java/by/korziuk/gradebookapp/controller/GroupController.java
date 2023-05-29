@@ -1,5 +1,6 @@
 package by.korziuk.gradebookapp.controller;
 
+import by.korziuk.gradebookapp.dto.GroupExamsDTO;
 import by.korziuk.gradebookapp.model.Group;
 import by.korziuk.gradebookapp.model.Teacher;
 import by.korziuk.gradebookapp.service.GroupService;
@@ -91,5 +92,16 @@ public class GroupController {
         Boolean delete = groupService.delete(id);
         model.addAttribute("deleted", delete);
         return "delete-group";
+    }
+
+    @GetMapping("/{id}/exams")
+    public String getGroupExams(
+            @PathVariable("id") String id,
+            Model model
+    ) {
+        Group group = groupService.get(id);
+        GroupExamsDTO dto = mapService.toExamsDto(group);
+        model.addAttribute("dto", dto);
+        return "view-group-exams";
     }
 }
