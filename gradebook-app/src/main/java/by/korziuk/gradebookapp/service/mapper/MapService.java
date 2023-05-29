@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -26,10 +27,24 @@ public class MapService {
 
     public GroupDTO toDto(Group group) {
         log.info("Converting to DTO. Getting group with ID: {}", group.getId());
-        if (group.getTeacher() == null) {
-            return new GroupDTO(group.getId(), group.getName(), null);
+        if (group.getStudents() == null) {
+            if (group.getTeacher() == null) {
+                return new GroupDTO(group.getId(), group.getName(), null, null);
+            } else {
+                return new GroupDTO(group.getId(), group.getName(), group.getTeacher().getId(), null);
+            }
         } else {
-            return new GroupDTO(group.getId(), group.getName(), group.getTeacher().getId());
+            if (group.getTeacher() == null) {
+                return new GroupDTO(group.getId(), group.getName(), null,
+                        group.getStudents().stream()
+                                .map(Student::getId)
+                                .collect(Collectors.toList()));
+            } else {
+                return new GroupDTO(group.getId(), group.getName(), group.getTeacher().getId(),
+                        group.getStudents().stream()
+                                .map(Student::getId)
+                                .collect(Collectors.toList()));
+            }
         }
     }
 

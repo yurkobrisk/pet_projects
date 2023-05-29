@@ -28,11 +28,21 @@
               </option>
           </select>
       </p>
-<!--      <p>Group's students:-->
-<!--        <ul th:each="student : ${group.getStudents()}">-->
-<!--          <li th:text="${student.getName()} + ' ' + ${student.getLastName()}"></li>-->
-<!--        </ul>-->
-<!--      </p>-->
+      <p>Students:
+<!--          if students list == null-->
+          <select multiple th:if="${dto.getStudentsId()} == null">
+              <option th:each="student : ${students}" th:text = "${student.getName()} + ' ' + ${student.getLastName()}"
+                      th:value="${student.getId()}" ></option>
+          </select>
+<!--          if students list != null-->
+          <select multiple th:unless="${dto.getStudentsId()} == null">
+              <option th:each="student : ${students}"
+                      th:text = "${student.getName()} + ' ' + ${student.getLastName()}"
+                      th:value="${student.id}"
+                      th:selected="${#lists.contains(dto.getStudentsId(), student.getId())}">
+              </option>
+          </select>
+      </p>
 
       <div>
           <input type="submit" value="Save group">

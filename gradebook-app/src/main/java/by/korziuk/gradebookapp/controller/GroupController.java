@@ -2,8 +2,10 @@ package by.korziuk.gradebookapp.controller;
 
 import by.korziuk.gradebookapp.dto.GroupExamsDTO;
 import by.korziuk.gradebookapp.model.Group;
+import by.korziuk.gradebookapp.model.Student;
 import by.korziuk.gradebookapp.model.Teacher;
 import by.korziuk.gradebookapp.service.GroupService;
+import by.korziuk.gradebookapp.service.StudentService;
 import by.korziuk.gradebookapp.service.TeacherService;
 import by.korziuk.gradebookapp.dto.GroupDTO;
 import by.korziuk.gradebookapp.service.mapper.MapService;
@@ -22,6 +24,7 @@ public class GroupController {
 
     private final GroupService groupService;
     private final TeacherService teacherService;
+    private final StudentService studentService;
     private final MapService mapService;
 
     @GetMapping("")
@@ -68,8 +71,10 @@ public class GroupController {
     Group group = groupService.get(id);
     GroupDTO dto = mapService.toDto(group);
     List<Teacher> teachers = teacherService.list();
+    List<Student> students = studentService.list();
     model.addAttribute("dto", dto);
     model.addAttribute("teachers", teachers);
+    model.addAttribute("students", students);
     return "update-group";
 }
 

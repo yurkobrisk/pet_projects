@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -27,8 +28,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Collection<Student> list(int limit) {
-        log.info("Fetching all students");
+        log.info("Fetching {} students", limit);
         return studentRepository.findAll(PageRequest.of(0, limit)).toList();
+    }
+
+    @Override
+    public List<Student> list() {
+        log.info("Fetching all students");
+        return studentRepository.findAll();
     }
 
     @Override
