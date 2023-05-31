@@ -26,9 +26,19 @@ public class Group implements Serializable{
     @Column(name = "G_NAME", unique = true)
     @NotEmpty(message = "Group name cannot be empty or null")
     private String name;
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = false)
     private List<Student> students = new ArrayList<>();
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TEACHER_ID")
     private Teacher teacher;
+
+    public void addStudent(Student student) {
+        this.students.add(student);
+        student.setGroup(this);
+    }
+
+    public void removeStudent(Student student) {
+        this.students.remove(student);
+        student.setGroup(null);
+    }
 }

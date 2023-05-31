@@ -84,6 +84,16 @@ public class GroupController {
             Model model
     ) {
         Group group = mapService.toGroup(dto);
+        List<Student> studentsStored = studentService.findStudentsByGroupId(group.getId());
+        for (Student student : group.getStudents()) {
+            if (studentsStored.contains(student)) {
+                studentsStored.remove(student);
+                continue;
+            }
+            studentService.update(student);
+        }
+        studentsStored.forEach(student -> student.setGroup(null));
+
         model.addAttribute("group", group);
         groupService.update(group);
         return "view-group";

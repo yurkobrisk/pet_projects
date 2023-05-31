@@ -18,4 +18,6 @@ public interface StudentService {
     Student update(Student student);
 
     Boolean delete(String id);
+
+    List<Student> findStudentsByGroupId(String id);
 }

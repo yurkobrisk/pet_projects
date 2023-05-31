@@ -1,6 +1,7 @@
 package by.korziuk.gradebookapp.service.mapper;
 
 import by.korziuk.gradebookapp.data.GroupRepository;
+import by.korziuk.gradebookapp.data.StudentRepository;
 import by.korziuk.gradebookapp.data.TeacherRepository;
 import by.korziuk.gradebookapp.dto.GroupExamsDTO;
 import by.korziuk.gradebookapp.dto.StudentDTO;
@@ -11,9 +12,12 @@ import by.korziuk.gradebookapp.dto.GroupDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -24,6 +28,7 @@ public class MapService {
 
     private final TeacherRepository teacherRepository;
     private final GroupRepository groupRepository;
+    private final StudentRepository studentRepository;
 
     public GroupDTO toDto(Group group) {
         log.info("Converting to DTO. Getting group with ID: {}", group.getId());
@@ -47,11 +52,17 @@ public class MapService {
             }
         }
     }
-
     public Group toGroup(GroupDTO dto) {
-        log.info("Converting to Group. Fetching teacher by ID: {}", dto.getTeacherId());
-        Teacher teacher = teacherRepository.findById(dto.getTeacherId()).orElse(null);
-        return new Group(dto.getId(), dto.getName(), new ArrayList<>(), teacher);
+        log.info("Converting to Group. Fetching teacher by ID: {}. Fetching list of students.", dto.getTeacherId());
+        Group group = new Group();
+        group.setId(dto.getId());
+        group.setName(dto.getName());
+        group.setTeacher(teacherRepository.findById(dto.getTeacherId()).orElse(null));
+        for (String id : dto.getStudentsId()) {
+            group.addStudent(studentRepository.findStudentById(id));
+        }
+
+        return group;
     }
 
     public StudentDTO toDto(Student student) {

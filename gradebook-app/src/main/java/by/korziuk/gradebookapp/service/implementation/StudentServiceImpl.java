@@ -56,4 +56,9 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.deleteById(id);
         return Boolean.TRUE;
     }
+
+    @Override
+    public List<Student> findStudentsByGroupId(String id) {
+        return studentRepository.findStudentsByGroupId(id);
+    }
 }

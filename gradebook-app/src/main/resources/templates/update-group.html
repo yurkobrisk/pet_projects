@@ -30,12 +30,12 @@
       </p>
       <p>Students:
 <!--          if students list == null-->
-          <select multiple th:if="${dto.getStudentsId()} == null">
+          <select multiple th:field="*{dto.studentsId}" th:if="${dto.getStudentsId()} == null">
               <option th:each="student : ${students}" th:text = "${student.getName()} + ' ' + ${student.getLastName()}"
-                      th:value="${student.getId()}" ></option>
+                      th:value="${{student.getId()}}" ></option>
           </select>
 <!--          if students list != null-->
-          <select multiple th:unless="${dto.getStudentsId()} == null">
+          <select multiple th:field="*{dto.studentsId}" th:unless="${dto.getStudentsId()} == null">
               <option th:each="student : ${students}"
                       th:text = "${student.getName()} + ' ' + ${student.getLastName()}"
                       th:value="${student.id}"
