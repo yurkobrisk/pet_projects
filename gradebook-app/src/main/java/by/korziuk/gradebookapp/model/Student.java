@@ -34,4 +34,14 @@ public class Student implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "G_ID")
     private Group group;
+
+    public void addExam(Exam exam) {
+        exams.add(exam);
+        exam.setStudent(this);
+    }
+
+    public void removeExam(Exam exam) {
+        exams.remove(exam);
+        exam.setStudent(null);
+    }
 }

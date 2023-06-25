@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,11 +24,10 @@ public class Exam implements Serializable{
     @Column(name = "E_ID", nullable = false, updatable = false, unique = true)
     private String id;
     @Column(name = "E_DATE")
-    @NotEmpty(message = "Date cannot be empty or null")
     private Date date;
     @Column(name = "E_GRADE")
-    @NotEmpty(message = "Grade cannot be empty or null")
-    private int grade;
+    @NotNull(message = "Grade cannot be empty or null")
+    private Integer grade;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "S_ID")
     private Student student;

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Exam</title>
+</head>
+<body>
+  <h1>Add new exam page!</h1>
+
+  <form action="#"  th:action="@{/gradebook/exams/add}" th:object="${dto}" method="post">
+      <p>
+          <input id="groupId" type="hidden" th:field="*{id}">
+          <label for="groupId" th:text="'ID Group is: ' + ${dto.getId()}"></label>
+      </p>
+      <p>
+          <input id="groupName" type="hidden" th:field="*{name}">
+          <label for="groupName" th:text="'Group name is: ' + ${dto.getName()}"></label>
+      </p>
+      <p>
+          <input type="hidden" th:field="*{teacherId}">
+          <input type="hidden" th:field="*{teacherLastName}">
+          <input id="teacherName" type="hidden" th:field="*{teacherName}">
+          <label for="teacherName" th:text="'Teacher: ' + ${dto.getTeacherName()} + ' ' + ${dto.getTeacherLastName()}"></label>
+      </p>
+      <p>
+          <input id="date" type="hidden" th:field="*{date}">
+          <label for="date" th:text="'Current date: ' + ${dto.getDate()}"></label>
+      </p>
+      Students:
+      <fieldset>
+          <table>
+              <thead>
+                  <tr>
+                      <th>#</th>
+                      <th>name</th>
+                      <th>last name</th>
+                      <th>test result</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <div th:each="student, stat : *{exams}">
+                      <input hidden th:value="${student.key}">
+                      <tr>
+                          <td><label th:text="${stat.count}"></label></td>
+                          <td><input hidden id="studentName" th:field="*{exams[__${student.key}__][0]}">
+                              <label for="studentName" th:text="${student.getValue()[0]}"></label></td>
+                          <td><input hidden id="studentLastName" th:field="*{exams[__${student.key}__][1]}">
+                              <label for="studentLastName" th:text="${student.getValue()[1]}"></label></td>
+                          <td><input th:field="*{exams[__${student.key}__][2]}"></td>
+                      </tr>
+                  </div>
+              </tbody>
+          </table>
+      </fieldset>
+
+      <div>
+          <input type="submit" value="Save exams">
+      </div>
+  </form>
+
+  <a href="/gradebook/groups" role="button">Back to group list</a>
+</body>
+</html>

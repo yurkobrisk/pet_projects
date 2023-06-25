@@ -1,11 +1,10 @@
 package by.korziuk.gradebookapp.dto;
 
-import by.korziuk.gradebookapp.model.Student;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -15,6 +14,7 @@ public class GroupExamsDTO {
     private String name;
     private String teacherId;
     private String teacherName;
-    private List<Student> students;
-
+    private String teacherLastName;
+    private String date;
+    private Map<String, String[]> exams; // studentId, [studentName, studentLastName, studentGrade]
 }

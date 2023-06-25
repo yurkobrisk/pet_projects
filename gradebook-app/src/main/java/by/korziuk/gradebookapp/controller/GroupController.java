@@ -83,7 +83,7 @@ public class GroupController {
             @ModelAttribute("dto") GroupDTO dto,
             Model model
     ) {
-        Group group = mapService.toGroup(dto);
+        Group group = mapService.toExams(dto);
         List<Student> studentsStored = studentService.findStudentsByGroupId(group.getId());
         for (Student student : group.getStudents()) {
             if (studentsStored.contains(student)) {
@@ -115,7 +115,7 @@ public class GroupController {
             Model model
     ) {
         Group group = groupService.get(id);
-        GroupExamsDTO dto = mapService.toExamsDto(group);
+        GroupExamsDTO dto = mapService.toGroupExamsDto(group);
         model.addAttribute("dto", dto);
         return "view-group-exams";
     }
