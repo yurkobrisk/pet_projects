@@ -1,9 +1,7 @@
 package by.korziuk.gradebookapp.controller;
 
 import by.korziuk.gradebookapp.dto.GroupExamsDTO;
-import by.korziuk.gradebookapp.model.Exam;
 import by.korziuk.gradebookapp.model.Group;
-import by.korziuk.gradebookapp.model.Student;
 import by.korziuk.gradebookapp.service.GroupService;
 import by.korziuk.gradebookapp.service.StudentService;
 import by.korziuk.gradebookapp.service.mapper.MapService;
@@ -12,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/gradebook/exams")
@@ -37,20 +35,18 @@ public class ExamController {
             @ModelAttribute("dto") GroupExamsDTO dto,
             Model model
     ) {
-        List<Exam> exams = mapService.toExams(dto);
-        String groupId = exams.get(0).getStudent().getGroup().getId();
-        Group group = groupService.get(groupId);
-        for (Exam exam : exams) {
-            for (Student student : group.getStudents()) {
-                if (student.getId().equals(exam.getStudent().getId())) {
-                    student.addExam(exam);
-                    break;
-                }
-            }
-        }
+        Group group = groupService.get(dto.getId());
 
+        mapService.toExams(dto).forEach(exam ->
+            Objects.requireNonNull(group.getStudents()
+                            .stream()
+                            .filter(student -> student.getId().equals(exam.getStudent().getId()))
+                            .findFirst()
+                            .orElse(null))
+                    .addExam(exam)
+        );
         model.addAttribute("group", group);
         groupService.update(group);
-        return "view-group";
+        return "view-group-exams";
     }
 }

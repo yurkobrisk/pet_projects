@@ -8,14 +8,30 @@
 <body>
   <h1>It's view group exams page!</h1>
 
-  <p th:text="'Group ID is: ' + ${dto.getId()}"> </p>
-  <p th:text="'Group name: ' + ${dto.getName()}"> </p>
-  <p th:text="'Teacher: ' + ${dto.getTeacherId()} + ' ' + ${dto.getTeacherName()}"
-     th:unless="${dto.teacherId} == null">
+  <p th:text="'Group ID is: ' + *{group.id}"> </p>
+  <p th:text="'Group name: ' + *{group.name}"> </p>
+  <p th:text="'Teacher: ' + *{group.getTeacher().id} + ' ' + *{group.getTeacher().name} + ' ' + *{group.getTeacher().lastName}"
+     th:unless="${group.getTeacher().id} == null">
   </p>
   <p>Students:
-  <ul th:each="student : ${dto.getStudents()}" th:text="${student.getName()} + ' ' + ${student.getLastName()}"
-  th:unless="${dto.students} == null"></ul>
+    <table>
+      <thead>
+        <tr>
+          <th>Last Name</th>
+          <th>Name</th>
+          <th>Grade</th>
+          <th>Last Grade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="student : ${group.getStudents()}">
+          <td th:text="${student.getLastName()}"></td>
+          <td th:text="${student.getName()}"></td>
+          <td th:each="exam : ${student.getExams()}" th:text="${exam.getDate().toString()} + ' ' + ${exam.getGrade()}"></td>
+          <td th:text="${student.getExams().size()}"></td>
+        </tr>
+      </tbody>
+    </table>
   </p>
 
   <a href="/gradebook/groups" role="button">Back to group list</a>

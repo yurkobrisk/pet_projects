@@ -9,8 +9,6 @@ import by.korziuk.gradebookapp.model.Exam;
 import by.korziuk.gradebookapp.model.Group;
 import by.korziuk.gradebookapp.model.Student;
 import by.korziuk.gradebookapp.dto.GroupDTO;
-import by.korziuk.gradebookapp.model.Teacher;
-import by.korziuk.gradebookapp.service.ExamService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -115,11 +113,6 @@ public class MapService {
 
     public List<Exam> toExams(GroupExamsDTO dto) {
         log.info("Converting to Exams.");
-//        Teacher teacher = new Teacher(dto.getTeacherId(),
-//                dto.getTeacherName(),
-//                dto.getTeacherLastName(),
-//                " ",
-//                null);
         List<Exam> exams = new ArrayList<>();
         List<Student> students = new ArrayList<>();
         for (Map.Entry<String, String[]> entry : dto.getExams().entrySet()) {
@@ -128,26 +121,12 @@ public class MapService {
                     entry.getValue()[0],
                     entry.getValue()[1],
                     null,
-                    new Group(dto.getId(), dto.getName(), null, null));
+                    new Group(dto.getId(), null, null, null));
             students.add(student);
             int grade = Integer.parseInt(entry.getValue()[2]);
             Exam exam = new Exam("", Date.from(Instant.now()), grade, student);
             exams.add(exam);
         }
         return exams;
-//        dto.getExams().forEach((id, array[]) -> {
-//            students.add(new Student(id, array[0], array[1],
-//                    new Exam("", Date.from(Instant.now()), Integer.parseInt(array[2]), null), null));
-//        });
-//        Group group = new Group(dto.getId(), dto.getName(), students, teacher);
-//        if(group == null) {
-//            return null;
-//        }
-//        for (Student student : group.getStudents()) {
-//            int grade = Integer.parseInt(dto.getExams().get(student.getId())[2]);
-//            Exam exam = new Exam("", Date.from(Instant.now()), grade, student);
-//            student.addExam(exam);
-//        }
-//        return group;
     }
 }
