@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -84,7 +85,7 @@ public class MapService {
             if (group.getStudents() == null) {
                 return new GroupExamsDTO(group.getId(), group.getName(),
                         "", "", "",
-                        Date.from(Instant.now()).toString(), null);
+                        dateToString(Date.from(Instant.now())), null);
             } else {
                 Map<String, String []> exams = new HashMap<>();
                 group.getStudents().forEach(student -> exams.put(
@@ -92,13 +93,13 @@ public class MapService {
                         new String[]{student.getName(), student.getLastName(), ""}));
                 return new GroupExamsDTO(group.getId(), group.getName(),
                         "", "", "",
-                        Date.from(Instant.now()).toString(), exams);
+                        dateToString(Date.from(Instant.now())), exams);
             }
         } else {
             if (group.getStudents() == null) {
                 return new GroupExamsDTO(group.getId(), group.getName(),
                         group.getTeacher().getId(), group.getTeacher().getName(), group.getTeacher().getLastName(),
-                        Date.from(Instant.now()).toString(), null);
+                        dateToString(Date.from(Instant.now())), null);
             } else {
                 Map<String, String []> exams = new HashMap<>();
                 group.getStudents().forEach(student -> exams.put(
@@ -106,7 +107,7 @@ public class MapService {
                         new String[]{student.getName(), student.getLastName(), ""}));
                 return new GroupExamsDTO(group.getId(), group.getName(),
                         group.getTeacher().getId(), group.getTeacher().getName(), group.getTeacher().getLastName(),
-                        Date.from(Instant.now()).toString(), exams);
+                        dateToString(Date.from(Instant.now())), exams);
             }
         }
     }
@@ -128,5 +129,9 @@ public class MapService {
             exams.add(exam);
         }
         return exams;
+    }
+
+    public String dateToString(Date date) {
+        return new SimpleDateFormat("yyyy-MM-dd hh:mm").format(date);
     }
 }
